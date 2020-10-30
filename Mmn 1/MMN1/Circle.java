@@ -42,14 +42,13 @@ public class Circle
 
         // The Excircle variables:
         // Computing the radius of the external circle by using triangles formula:
-        // formula -> 2R = AB/sin y
-        // AB = distance between left-up and right-down corners
-        // sin y = sin (90) = 1
-        // so R == AB / 2
+        // formula -> 2R = AB/sin(y)
+        // sin(y) = sin (90) = 1
+        // AB = diagonalLength = distance between left-up and right-down corners
         double diagonalLength = Math.sqrt(
                 Math.pow(leftUpX - rightDownX, 2) + Math.pow(leftUpY - rightDownY, 2)
         );
-
+        // so R == (AB / 2)
         double exRadius = diagonalLength / 2;
 
         // Computing the area by formula:

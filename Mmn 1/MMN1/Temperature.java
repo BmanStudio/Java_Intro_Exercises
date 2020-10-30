@@ -16,8 +16,9 @@ public class Temperature
         System.out.println("This program taking a degrees measurement unit as C / F / K, along with"
                 + "amount of degrees of that unit, and converts that to each other unit.");
 
+        System.out.println("Please insert a unit type (C / F / K ) and number of degrees (float) to be converted");
+
         // Collecting the user's input for the type
-        System.out.println("Please insert a unit type (C / F / K as one char) and number of degrees (float) to be converted");
         String word = scan.next();
         char inputType = word.charAt(0);
 
