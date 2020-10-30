@@ -1,4 +1,3 @@
-package com.exercises;
 /**
  * This class's single method (main) takes an input from the user to represent a rectangle
  * and calculating the radius, areas and the perimeters of the excircle and the incircle
@@ -16,7 +15,7 @@ public class Circle
         System.out.println ("This program calculates the areas " +
                 "and the perimeters of the excircle and the incircle " +
                 "of a given rectangle");
-        
+                
         System.out.println ("Please enter the two coordinates of the " +
                 "left-upper point of the rectangle");
         int leftUpX = scan.nextInt();
@@ -38,7 +37,7 @@ public class Circle
 
         // P = 2 * PI * R
         double inPerimeter = 2 * Math.PI * inRadius;
-
+        
         System.out.println("Incircle: radius = " + inRadius + ", area = " + inArea +", perimeter = " + inPerimeter);
 
         // The Excircle variables:
