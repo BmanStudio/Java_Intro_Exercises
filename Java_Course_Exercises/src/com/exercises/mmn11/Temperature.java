@@ -1,4 +1,4 @@
-package com.exercises;
+package com.exercises.mmn11;
 /**
  * Class Temperature converts degrees between the measurement unit Celsius, Fahrenheit and Kelvin (as C / F / K respectively)
  * by asking the user to input an unit type and degrees of that unit.

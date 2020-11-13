@@ -1,4 +1,4 @@
-package com.exercises;
+package com.exercises.mmn11;
 /**
  * This class's single method (main) takes an input from the user to represent a rectangle
  * and calculating the radius, areas and the perimeters of the excircle and the incircle
