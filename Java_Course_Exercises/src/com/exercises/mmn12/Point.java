@@ -1,30 +1,33 @@
 package com.exercises.mmn12;
 
-
 /**
  * Represents 2 dimensional points.
  * @author Ori Ben Nun
  * @version 13/11/2020
  */
 public class Point {
-    // Constants:
-    //
-    private final double NINTY_DEGREES_RADIANS = Math.PI / 2;
-    private final double HUNDRED_EIGHTY_DEGREES_RADIANS = Math.PI;
+
+    //<editor-fold desc="Constants">
+    private final double NINTY_DEGREES_CELSIUS = 90;
+    private final double CELSIUS_TO_RADIANS_RATIO = Math.PI / 180;
+    private final double RADIANS_TO_CELSIUS_RATIO = 180 / Math.PI;
     private final double DEFAULT_X_Y_VALUE = 0.0;
     private final double COMPARE_THRESHOLD = 0.01;
+    private final double ROUNDING_MULTIPLIER = 10000.0;
+    //</editor-fold>
 
     // Private variables:
-    //
     private double _radius; // sqrt(x^2+Y^2)
-    private double _alpha; // IN RADIANS arctan(x/y)
+    private double _alpha; // IN DEGREES. degrees to radians formula = degree * PI/180
 
-    // Constructors:
-    //
+    //<editor-fold desc="Constructors">
+
     /**
-     * Constructor for objects of class Point.
-     * @param x the X value of the point (in the first quadrant)
-     * @param y - the Y value of the point (in the first quadrant)
+     * Constructor for objects of class Point. Construct a new point with the specified x y coordinates.
+     * If the x coordinate is negative it is set to zero.
+     * If the y coordinate is negative it is set to zero.
+     * @param x The x coordinate
+     * @param y The y coordinate
      */
     public Point(double x, double y) {
 
@@ -38,63 +41,66 @@ public class Point {
 
         // Setting alpha in radians:
         setAlphaAndRadius(x,y);
-
-        //setRadius(x,y);
     }
 
     /**
      * Constructor for objects of class Point.
-     * @param other - the Point object which it's values will be copied to the new Point.
+     * Copy constructor, construct a point using another point.
+     * @param other The point from which to construct the new object
      */
     public Point(Point other){
         _radius = other._radius;
         _alpha = other._alpha;
     }
+    //</editor-fold>
 
-    // Private Methods:
-    //
+    //<editor-fold desc="Private Methods">
+
+    private double celsiusToRadians(double celsius){
+        return celsius * CELSIUS_TO_RADIANS_RATIO;
+    }
+
+    private double radiansToCelsius(double radians){
+        return radians * RADIANS_TO_CELSIUS_RATIO;
+    }
 
     private void setAlphaAndRadius(double x, double y){
         if (x == 0) {
-            _alpha = NINTY_DEGREES_RADIANS;
+            _alpha = NINTY_DEGREES_CELSIUS;
         }
         else {
-            _alpha = Math.atan(y / x);
+            _alpha = radiansToCelsius(Math.atan(y / x));
         }
 
         _radius = Math.sqrt(
                 Math.pow(x, 2) + Math.pow(y ,2));
     }
-/*
-    private void setRadius(double x, double y){
-        _radius = Math.sqrt(
-                Math.pow(x, 2) + Math.pow(y ,2));
-    }*/
+    //</editor-fold>
 
     // Public Methods:
-    //
 
     /**
      * This method returns the x coordinate of the point.
-     * @return the x coordinate of the point.
+     * @return The x coordinate of the point
      */
     public double getX(){
-        double xValue = Math.cos(_alpha) * _radius;
+        double xValue = Math.cos(celsiusToRadians(_alpha)) * _radius;
         return xValue;
     }
 
     /**
      * This method returns the y coordinate of the point.
-     * @return the y coordinate of the point.
+     * @return The y coordinate of the point
      */
     public double getY(){
-        double yValue = Math.sin(_alpha) * _radius;
+        double yValue = Math.sin(celsiusToRadians(_alpha)) * _radius;
         return yValue;
     }
 
     /**
      * This method sets the x coordinate of the point.
-     * @param x - the new x coordinate of the point.
+     * If the new x coordinate is negative the old x coordinate will remain unchanged.
+     * @param x The new x coordinate
      */
     public void setX(double x){
         // Reset negative value:
@@ -103,13 +109,12 @@ public class Point {
         }
 
         setAlphaAndRadius(x, getY());
-
-        //setRadius(x, getY());
     }
 
     /**
      * This method sets the y coordinate of the point.
-     * @param y - the new y coordinate of the point.
+     * If the new y coordinate is negative the old y coordinate will remain unchanged.
+     * @param y The new y coordinate
      */
     public void setY(double y){
         // Reset negative value:
@@ -118,25 +123,23 @@ public class Point {
         }
 
         setAlphaAndRadius(getX(), y);
-
-        //setRadius(getX(), y);
     }
 
     /**
      * Returns a string representation of Point in the format (x,y).
-     * @return a string representation of Point in the format (x,y).
+     * @return A String representation of the Point
      */
     public String toString(){
-        double roundedX = Math.round(getX() * 10000) / (double)10000;
-        double roundedY = Math.round(getY() * 10000) / (double)10000;
+        double roundedX = Math.round(getX() * ROUNDING_MULTIPLIER) / ROUNDING_MULTIPLIER;
+        double roundedY = Math.round(getY() * ROUNDING_MULTIPLIER) / ROUNDING_MULTIPLIER;
 
         return "(" + roundedX + "," + roundedY + ")";
     }
 
     /**
      * Check if the given point is equal to this point.
-     * @param other the point to be compared with
-     * @return true if points coordinates are equal, and false if not.
+     * @param other The point to check equality with
+     * @return True if the given point is equal to this point
      */
     public boolean equals(Point other){
         return (_radius == other._radius && _alpha == other._alpha);
@@ -144,8 +147,8 @@ public class Point {
 
     /**
      * Check if this point is above a received point.
-     * @param other the point to be compared with
-     * @return true if this point is above the given point, and false if not (if under or on the same Y axis value)
+     * @param other The point to check if this point is above
+     * @return True if this point is above the other point
      */
     public boolean isAbove(Point other){
         return getY() - other.getY() > COMPARE_THRESHOLD;
@@ -153,8 +156,8 @@ public class Point {
 
     /**
      * Check if this point is below a received point.
-     * @param other the point to be compared with.
-     * @return true if this point is under the given point, and false if not (if above or on the same Y axis value)
+     * @param other The point to check if this point is below
+     * @return True if this point is below the other point
      */
     public boolean isUnder(Point other){
         return other.isAbove(this);
@@ -162,8 +165,8 @@ public class Point {
 
     /**
      * Check if this point is left of a received point.
-     * @param other the point to be compared with
-     * @return true if this point is left to the given point, and false if not (if right or on the same X axis value)
+     * @param other The point to check if this point is left of
+     * @return True if this point is left of the other point
      */
     public boolean isLeft(Point other){
         return getX() < other.getX();
@@ -171,8 +174,8 @@ public class Point {
 
     /**
      * Check if this point is right of a received point.
-     * @param other the point to be compared with
-     * @return true if this point is right to the given point, and false if not (if left or on the same X axis value)
+     * @param other The point to check if this point is right of
+     * @return True if this point is right of the other point
      */
     public boolean isRight(Point other){
         return other.isLeft(this);
@@ -180,8 +183,8 @@ public class Point {
 
     /**
      * Check the distance between this point and a given point.
-     * @param other - the other point which the "distance to" will be returned
-     * @return the distance between this point and the given point.
+     * @param other The point to check the distance from
+     * @return The distance
      */
     public double distance(Point other){
         double yDiffPow = Math.pow(getY() - other.getY(), 2);
@@ -191,8 +194,9 @@ public class Point {
 
     /**
      * Moves a point.
-     * @param dx the delta which X will move by
-     * @param dy the delta which Y will move by
+     * If either coordinate becomes negative the point remains unchanged.
+     * @param dx The difference to add to x
+     * @param dy The difference to add to y
      */
     public void move(double dx, double dy){
         double newX = getX() + dx;
