@@ -3,7 +3,7 @@ package com.exercises.mmn12;
 /**
  * Represents 2 dimensional points.
  * @author Ori Ben Nun
- * @version 13/11/2020
+ * @version 16/11/2020
  */
 public class Point {
 
@@ -143,6 +143,7 @@ public class Point {
      */
     public boolean equals(Point other){
         return (_radius == other._radius && _alpha == other._alpha);
+        //return (_radius - other._radius < COMPARE_THRESHOLD && _alpha - other._alpha < COMPARE_THRESHOLD);
     }
 
     /**
@@ -169,7 +170,7 @@ public class Point {
      * @return True if this point is left of the other point
      */
     public boolean isLeft(Point other){
-        return getX() < other.getX();
+        return other.getX() - getX() > COMPARE_THRESHOLD;
     }
 
     /**

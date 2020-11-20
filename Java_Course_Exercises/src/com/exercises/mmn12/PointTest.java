@@ -116,10 +116,27 @@ class PointTest {
     public void isLeftTest(){
         Point point1 = new Point(10, 50);
         Point point2 = new Point(20, 6);
+        Point point3 = new Point(10, 6);
         assertEquals(true, point1.isLeft(point2));
-        assertEquals(false, point1.isRight(point2));
+        assertEquals(false, point1.isLeft(point1));
+        assertEquals(false, point1.isRight(point3));
+        assertEquals(false, point1.isLeft(point3));
+        assertEquals(false, point3.isLeft(point3));
+        assertEquals(false, point3.isLeft(point1));
         assertEquals(true, point2.isRight(point1));
         assertEquals(false, point2.isLeft(point2));
         assertEquals(false, point2.isLeft(point1));
+        assertEquals(true, point2.isRight(point1));
+        assertEquals(true, point2.isRight(point3));
+        assertEquals(false, point2.isRight(point2));
+    }
+
+    @Test
+    public void distanceTest(){
+        Point point1 = new Point(2, 5);
+        Point point2 = new Point(2, 5);
+        assertEquals(0, point1.distance(point2));
+        point2.move(1, 1);
+        assertEquals(Math.sqrt(2), point1.distance(point2), 0.01);
     }
 }
