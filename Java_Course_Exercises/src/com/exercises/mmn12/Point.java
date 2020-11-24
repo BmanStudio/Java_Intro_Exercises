@@ -142,7 +142,8 @@ public class Point {
      * @return True if the given point is equal to this point
      */
     public boolean equals(Point other){
-        return (_radius == other._radius && _alpha == other._alpha);
+        //return (_radius == other._radius && _alpha == other._alpha);
+        return this.distance(other) < COMPARE_THRESHOLD;
         //return (_radius - other._radius < COMPARE_THRESHOLD && _alpha - other._alpha < COMPARE_THRESHOLD);
     }
 

@@ -208,4 +208,75 @@ class Segment1Test {
         assertEquals(true, segment1.pointOnSegment(segment1.getPoLeft()));
         assertEquals(true, segment1.pointOnSegment(segment1.getPoRight()));
     }
+
+    @Test
+    void isBigger() {
+        Segment1 segment1 = new Segment1(new Point(3,10), new Point(6,10));
+        Segment1 segment2 = new Segment1(new Point(3,10), new Point(6,10));
+        assertEquals(false, segment1.isBigger(segment1));
+        assertEquals(false, segment1.isBigger(segment2));
+        segment2.changeSize(0.5);
+        assertEquals(true, segment2.isBigger(segment1));
+        segment1.moveHorizontal(500);
+        assertEquals(true, segment2.isBigger(segment1));
+        segment1.changeSize(0.5);
+        assertEquals(false, segment2.isBigger(segment1));
+        assertEquals(false, segment1.isBigger(segment2));
+        segment1.changeSize(0.5);
+        assertEquals(true, segment1.isBigger(segment2));
+    }
+
+    @Test
+    void overlap() {
+        Segment1 segment1 = new Segment1(new Point(3,10), new Point(6,10));
+        Segment1 segment2 = new Segment1(new Point(3,80), new Point(6,50));
+        assertEquals(3, segment1.overlap(segment2), 0.01);
+        assertEquals(3, segment1.overlap(segment1), 0.01);
+        segment2.moveHorizontal(1);
+        assertEquals(2, segment1.overlap(segment2), 0.01);
+        segment2.changeSize(-2);
+        assertEquals(1, segment1.overlap(segment2), 0.01);
+        segment1.changeSize(-1);
+        assertEquals(1, segment1.overlap(segment2), 0.01);
+        segment1.changeSize(-1);
+        assertEquals(0, segment1.overlap(segment2), 0.01);
+
+        Segment1 segment3 = new Segment1(segment1);
+        segment3.moveVertical(1024);
+        assertEquals(segment1.getLength(), segment1.overlap(segment3), 0.01);
+        segment3.changeSize(-1);
+        assertEquals(segment1.getLength() -1, segment1.overlap(segment3), 0.01);
+        segment3.moveHorizontal(1);
+        assertEquals(segment1.getLength() -1, segment1.overlap(segment3), 0.01);
+
+        Segment1 segment4 = new Segment1(new Point(3,4), new Point(5,4));
+        Segment1 segment5 = new Segment1(new Point(0,2), new Point(2,4));
+        Segment1 segment6 = new Segment1(new Point(1,1), new Point(4,1));
+        Segment1 segment7 = new Segment1(new Point(1,10), new Point(4,10));
+
+        assertEquals(1, segment6.overlap(segment4), 0.01);
+        assertEquals(1, segment6.overlap(segment5), 0.01);
+        assertEquals(segment7.getLength(), segment7.overlap(segment6), 0.01);
+        segment7.changeSize(10);
+        assertEquals(segment6.getLength(), segment7.overlap(segment6), 0.01);
+        segment7.moveHorizontal(100);
+        assertEquals(0, segment7.overlap(segment6), 0.01);
+    }
+
+    @Test
+    void trapezePerimeter() {
+        Segment1 segment1 = new Segment1(new Point(1,1), new Point(4,1));
+        Segment1 segment2 = new Segment1(new Point(1,2), new Point(4,2));
+        assertEquals(3 + 3 + 1 + 1, segment1.trapezePerimeter(segment2));
+        segment2.moveVertical(10);
+        assertEquals(3 + 3 + 1 + 1 + 20, segment1.trapezePerimeter(segment2), 0.01);
+        segment1.changeSize(2);
+        assertEquals(3 + 3 + 1 + 1 + 20 + 2, segment1.trapezePerimeter(segment2), .5);
+        segment1.changeSize(2);
+        assertEquals(3 + 3 + 1 + 1 + 20 + 2 + 2, segment1.trapezePerimeter(segment2), 1);
+        segment1.moveHorizontal(1);
+        assertEquals(3 + 3 + 1 + 1 + 20 + 2 + 2 + 1, segment1.trapezePerimeter(segment2), .5);
+        segment2.moveVertical(100);
+        assertEquals(3 + 3 + 1 + 1 + 20 + 2 + 2 + 1 + 200, segment1.trapezePerimeter(segment2), 1);
+    }
 }

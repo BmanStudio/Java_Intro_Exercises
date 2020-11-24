@@ -12,8 +12,8 @@ public class Segment1 {
 
     // Instance Variables:
 
-    Point _poLeft;
-    Point _poRight;
+    private Point _poLeft;
+    private Point _poRight;
 
     // Constructors:
 
@@ -135,5 +135,51 @@ public class Segment1 {
         else if (p.isLeft(_poRight) && p.isRight(_poLeft)) return true;
 
         return false;
+    }
+
+    public boolean isBigger(Segment1 other) {
+        return this.getLength() - other.getLength() > COMPARE_THRESHOLD;
+    }
+
+    public double overlap(Segment1 other) {
+        // We will create a copy of the other segment and we'll set its Y value (level) to our level.
+        double myLevel = this.getPoLeft().getY();
+        Segment1 sameLevelOtherSeg = new Segment1(other._poLeft.getX(), myLevel,
+                                            other.getPoRight().getX(), myLevel);
+        // If no interaction at all, return 0 as requested
+        if (sameLevelOtherSeg.isLeft(this) || sameLevelOtherSeg.isRight(this)) {
+            return 0;
+        }
+        // If not, means they got some interaction point/s:
+
+        // if other's left point is on our segment we will check if our right point is on other's segment
+        // if it does, we will check the distance between other's left and our right point:
+        // if it doesnt, we will return other's length (cuz the overlap is all of its length)
+        if (this.pointOnSegment(sameLevelOtherSeg.getPoLeft())) {
+            if (sameLevelOtherSeg.pointOnSegment(this.getPoRight())){
+                // equal segments should enter here, and it should return their (same) length
+                return getPoRight().distance(sameLevelOtherSeg.getPoLeft());
+            }
+            else {
+                return sameLevelOtherSeg.getLength();
+            }
+        }
+        // if other's right point is on our segment we will check if our left point is on other's segment
+        // if it does, we will check the distance between other's right and our left point:
+        // if it doesnt, means other's point left is also on our segment, means the first if will catch it.
+        else if (this.pointOnSegment(sameLevelOtherSeg.getPoRight())) {
+            if (sameLevelOtherSeg.pointOnSegment(this.getPoLeft())) {
+                return getPoLeft().distance(sameLevelOtherSeg._poRight);
+            }
+        }
+
+        // if got here, means something unexpected happen, we will return 0 as default
+        return 0;
+    }
+
+    public double trapezePerimeter(Segment1 other) {
+        double leftSideLength = this.getPoLeft().distance(other.getPoLeft()); // distance between left points
+        double rightSideLength = this.getPoRight().distance(other.getPoRight()); // distance between right points
+        return this.getLength() + leftSideLength + other.getLength() + rightSideLength;
     }
 }
