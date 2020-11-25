@@ -3,17 +3,18 @@ package com.exercises.mmn12;
 /**
  * Represents 2 dimensional points.
  * @author Ori Ben Nun
- * @version 16/11/2020
+ * @version 23/11/2020
  */
 public class Point {
 
     //<editor-fold desc="Constants">
-    private final double NINTY_DEGREES_CELSIUS = 90;
+    private final double NINETY_DEGREES_CELSIUS = 90;
     private final double CELSIUS_TO_RADIANS_RATIO = Math.PI / 180;
     private final double RADIANS_TO_CELSIUS_RATIO = 180 / Math.PI;
     private final double DEFAULT_X_Y_VALUE = 0.0;
     private final double COMPARE_THRESHOLD = 0.01;
     private final double ROUNDING_MULTIPLIER = 10000.0;
+    private final double POW_TWO = 2.0;
     //</editor-fold>
 
     // Private variables:
@@ -32,10 +33,10 @@ public class Point {
     public Point(double x, double y) {
 
         // Reset negative values:
-        if (x < 0) {
+        if (x < DEFAULT_X_Y_VALUE) {
             x = DEFAULT_X_Y_VALUE;
         }
-        if (y < 0) {
+        if (y < DEFAULT_X_Y_VALUE) {
             y = DEFAULT_X_Y_VALUE;
         }
 
@@ -65,15 +66,15 @@ public class Point {
     }
 
     private void setAlphaAndRadius(double x, double y){
-        if (x == 0) {
-            _alpha = NINTY_DEGREES_CELSIUS;
+        if (x == DEFAULT_X_Y_VALUE) {
+            _alpha = NINETY_DEGREES_CELSIUS;
         }
         else {
             _alpha = radiansToCelsius(Math.atan(y / x));
         }
 
         _radius = Math.sqrt(
-                Math.pow(x, 2) + Math.pow(y ,2));
+                Math.pow(x, POW_TWO) + Math.pow(y , POW_TWO));
     }
     //</editor-fold>
 
@@ -104,7 +105,7 @@ public class Point {
      */
     public void setX(double x){
         // Reset negative value:
-        if (x < 0) {
+        if (x < DEFAULT_X_Y_VALUE) {
             return;
         }
 
@@ -118,7 +119,7 @@ public class Point {
      */
     public void setY(double y){
         // Reset negative value:
-        if (y < 0) {
+        if (y < DEFAULT_X_Y_VALUE) {
             return;
         }
 
@@ -189,8 +190,8 @@ public class Point {
      * @return The distance
      */
     public double distance(Point other){
-        double yDiffPow = Math.pow(getY() - other.getY(), 2);
-        double xDiffPow = Math.pow(getX() - other.getX(), 2);
+        double yDiffPow = Math.pow(getY() - other.getY(), POW_TWO);
+        double xDiffPow = Math.pow(getX() - other.getX(), POW_TWO);
         return Math.sqrt(yDiffPow + xDiffPow);
     }
 
@@ -205,7 +206,7 @@ public class Point {
         double newY = getY() + dy;
 
         // returns if the point will move outside of the first quadrant
-        if (newX < 0 || newY < 0){
+        if (newX < DEFAULT_X_Y_VALUE || newY < DEFAULT_X_Y_VALUE){
             return;
         }
 

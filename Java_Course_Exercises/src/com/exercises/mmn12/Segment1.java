@@ -7,7 +7,7 @@ package com.exercises.mmn12;
  */
 public class Segment1 {
     // Constants:
-    private final double DEFAULT_X_Y_VALUE = 0.0;
+    private final double ZERO = 0.0;
     private final double COMPARE_THRESHOLD = 0.01;
 
     // Instance Variables:
@@ -20,14 +20,14 @@ public class Segment1 {
     public Segment1(Point left, Point right) {
         _poLeft = new Point(left);
         _poRight = new Point(right);
-        setRightYtoLeftYifNotParallel();
+        forceParallelSegment();
     }
 
     public Segment1(double leftX ,double leftY,
                     double rightX ,double rightY) {
         _poLeft = new Point(leftX, leftY);
         _poRight = new Point(rightX, rightY);
-        setRightYtoLeftYifNotParallel();
+        forceParallelSegment();
     }
 
     public Segment1(Segment1 other) {
@@ -37,10 +37,8 @@ public class Segment1 {
 
     // Private Methods:
 
-    private void setRightYtoLeftYifNotParallel() {
-        if (_poLeft.getY() != _poRight.getY()){
-            _poRight.setY(_poLeft.getY());
-        }
+    private void forceParallelSegment() {
+        _poRight.setY(_poLeft.getY());
     }
 
     // Public Methods:
@@ -83,10 +81,10 @@ public class Segment1 {
 
     public void moveHorizontal(double delta) {
         Point newPointLeft = new Point(_poLeft);
-        newPointLeft.move(delta, 0);
+        newPointLeft.move(delta, ZERO);
 
         Point newPointRight = new Point(_poRight);
-        newPointRight.move(delta, 0);
+        newPointRight.move(delta, ZERO);
 
         // In order to check if one of the points will be outside of the
         // first quadrant after the movement, checking if the one of the
@@ -102,10 +100,10 @@ public class Segment1 {
 
     public void moveVertical(double delta) {
         Point newPointLeft = new Point(_poLeft);
-        newPointLeft.move(0, delta);
+        newPointLeft.move(ZERO, delta);
 
         Point newPointRight = new Point(_poRight);
-        newPointRight.move(0, delta);
+        newPointRight.move(ZERO, delta);
 
         // In order to check if one of the points will be outside of the
         // first quadrant after the movement, checking if the one of the
@@ -122,9 +120,9 @@ public class Segment1 {
     public void changeSize(double delta) {
         double newSize = getLength() + delta;
 
-        if (newSize < 0) return;
+        if (newSize < ZERO) return;
 
-        _poRight.move(delta, 0);
+        _poRight.move(delta, ZERO);
     }
 
     public boolean pointOnSegment (Point p) {
@@ -148,7 +146,7 @@ public class Segment1 {
                                             other.getPoRight().getX(), myLevel);
         // If no interaction at all, return 0 as requested
         if (sameLevelOtherSeg.isLeft(this) || sameLevelOtherSeg.isRight(this)) {
-            return 0;
+            return ZERO;
         }
         // If not, means they got some interaction point/s:
 
@@ -174,7 +172,7 @@ public class Segment1 {
         }
 
         // if got here, means something unexpected happen, we will return 0 as default
-        return 0;
+        return ZERO;
     }
 
     public double trapezePerimeter(Segment1 other) {
