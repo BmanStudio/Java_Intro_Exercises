@@ -7,21 +7,19 @@ package com.exercises.mmn12;
  */
 public class Point {
 
-    //<editor-fold desc="Constants">
+    // Constants:
     private final double NINETY_DEGREES_CELSIUS = 90;
     private final double CELSIUS_TO_RADIANS_RATIO = Math.PI / 180;
     private final double RADIANS_TO_CELSIUS_RATIO = 180 / Math.PI;
     private final double DEFAULT_X_Y_VALUE = 0.0;
     private final double COMPARE_THRESHOLD = 0.01;
     private final double ROUNDING_MULTIPLIER = 10000.0;
-    private final double POW_TWO = 2.0;
-    //</editor-fold>
 
     // Private variables:
     private double _radius; // sqrt(x^2+Y^2)
     private double _alpha; // IN DEGREES. degrees to radians formula = degree * PI/180
 
-    //<editor-fold desc="Constructors">
+    // Constructors
 
     /**
      * Constructor for objects of class Point. Construct a new point with the specified x y coordinates.
@@ -53,9 +51,8 @@ public class Point {
         _radius = other._radius;
         _alpha = other._alpha;
     }
-    //</editor-fold>
 
-    //<editor-fold desc="Private Methods">
+    // Private Methods
 
     private double celsiusToRadians(double celsius){
         return celsius * CELSIUS_TO_RADIANS_RATIO;
@@ -74,9 +71,8 @@ public class Point {
         }
 
         _radius = Math.sqrt(
-                Math.pow(x, POW_TWO) + Math.pow(y , POW_TWO));
+                Math.pow(x, 2) + Math.pow(y , 2));
     }
-    //</editor-fold>
 
     // Public Methods:
 
@@ -85,8 +81,7 @@ public class Point {
      * @return The x coordinate of the point
      */
     public double getX(){
-        double xValue = Math.cos(celsiusToRadians(_alpha)) * _radius;
-        return xValue;
+        return Math.cos(celsiusToRadians(_alpha)) * _radius;
     }
 
     /**
@@ -94,8 +89,7 @@ public class Point {
      * @return The y coordinate of the point
      */
     public double getY(){
-        double yValue = Math.sin(celsiusToRadians(_alpha)) * _radius;
-        return yValue;
+        return Math.sin(celsiusToRadians(_alpha)) * _radius;
     }
 
     /**
@@ -190,8 +184,8 @@ public class Point {
      * @return The distance
      */
     public double distance(Point other){
-        double yDiffPow = Math.pow(getY() - other.getY(), POW_TWO);
-        double xDiffPow = Math.pow(getX() - other.getX(), POW_TWO);
+        double yDiffPow = Math.pow(getY() - other.getY(), 2);
+        double xDiffPow = Math.pow(getX() - other.getX(), 2);
         return Math.sqrt(yDiffPow + xDiffPow);
     }
 
