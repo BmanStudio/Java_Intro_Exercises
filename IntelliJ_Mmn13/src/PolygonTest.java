@@ -209,4 +209,66 @@ class PolygonTest {
         assertEquals(1 + Math.sqrt(5) + Math.sqrt(8), polygon3.calcPerimeter());
 
     }
+
+/*    @Test
+    void triangleArea() {
+        Point a = new Point(3,1);
+        Point b = new Point(4,3);
+        Point c = new Point(3,4);
+        Polygon polygon = new Polygon();
+
+        assertEquals(1.4996, polygon.triangleArea(a,b,c), 0.01);
+
+        Point d = new Point(1,3);
+
+        assertEquals(2.999, polygon.triangleArea(a,c,d), 0.01);
+
+        Point e = new Point(2,1);
+
+        assertEquals(1, polygon.triangleArea(a,d,e), 0.01);
+
+        polygon.addVertex(a.getX(), a.getY());
+        polygon.addVertex(b.getX(), b.getY());
+        polygon.addVertex(c.getX(), c.getY());
+        polygon.addVertex(d.getX(), d.getY());
+        polygon.addVertex(e.getX(), e.getY());
+
+        double expectedArea = polygon.triangleArea(a, b, c) + polygon.triangleArea(a,c,d) + polygon.triangleArea(a,d,e);
+
+        assertEquals(expectedArea, polygon.calcArea(), 0.01);
+    }*/
+
+    @Test
+    void calcArea() {
+        // Using the website https://www.mathopenref.com/coordpolygonareacalc.html
+
+        assertEquals(26.5, defaultPolygon.calcArea(), 0.01);
+
+        Polygon polygon = new Polygon();
+        polygon.addVertex(2,1);
+        polygon.addVertex(5,0);
+        polygon.addVertex(6,2);
+        polygon.addVertex(6.5,3);
+        polygon.addVertex(7,5);
+        polygon.addVertex(6,6);
+        polygon.addVertex(4,6);
+
+        assertEquals(18.75, polygon.calcArea(), 0.01);
+
+        Polygon polygon1 = new Polygon();
+        assertEquals(0, polygon1.calcArea(), 0.01);
+
+        polygon1.addVertex(2,1);
+        assertEquals(0, polygon1.calcArea(), 0.01);
+
+        polygon1.addVertex(5,0);
+        assertEquals(0, polygon1.calcArea(), 0.01);
+
+        polygon1.addVertex(6,2);
+        assertEquals(3.5, polygon1.calcArea(), 0.01);
+
+        polygon1.addVertex(6.5,4);
+        assertEquals(7.25, polygon1.calcArea(), 0.01);
+
+    }
 }

@@ -26,6 +26,24 @@ public class Polygon {
         _noOfVertices = 0;
     }
 
+    // Private methods:
+
+    private double triangleArea(Point a, Point b, Point c) {
+        // computing the lengths of the 3 sides of the triangles that is represented by the 3 points
+        double segABLength = a.distance(b);
+        double segBCLength = b.distance(c);
+        double segCALength = c.distance(a);
+
+        // in order to use Heron formula, we will compute the half of the triangle perimeter
+        double triPerimeter = segABLength + segBCLength + segCALength;
+
+        // Heron formula:
+        double s = triPerimeter / 2.0;
+        double triArea = Math.sqrt(s * (s - segABLength) * (s - segBCLength) * (s - segCALength));
+
+        return triArea;
+    }
+
     // Public methods:
 
     /**
@@ -111,5 +129,14 @@ public class Polygon {
         perimeter += _vertices[_noOfVertices - 1].distance(_vertices[0]);
 
         return perimeter;
+    }
+
+    public double calcArea() {
+        if (_noOfVertices < 3) { return 0; }
+        double area = 0;
+        for (int i = 2; i <= _noOfVertices - 1; i++) {
+            area += triangleArea(_vertices[0], _vertices[i - 1], _vertices[i]);
+        }
+        return area;
     }
 }
