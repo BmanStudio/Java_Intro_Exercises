@@ -1,7 +1,3 @@
-package com.exercises.mmn13;
-
-import com.exercises.mmn12.Point;
-
 /**
  * Represents Convex polygon.
  * A convex polygon is a simple polygon in which no line segment
