@@ -4,7 +4,7 @@
  * between two points on the boundary ever goes outside the polygon,
  * and all of the interior angles are less than 180 degrees
  * @author Ori Ben Nun
- * @version 3/12/2020
+ * @version 5/12/2020
  */
 public class Polygon {
 
@@ -27,7 +27,6 @@ public class Polygon {
     }
 
     // Private methods:
-
     private double triangleArea(Point a, Point b, Point c) {
         // computing the lengths of the 3 sides of the triangles that is represented by the 3 points
         double segABLength = a.distance(b);
@@ -206,5 +205,64 @@ public class Polygon {
         // So now we can safely tell that the given point has a next point
         int next = findVertex(p) + 1;
         return new Point(_vertices[next]);
+    }
+
+    /**
+     * Calculating the bounding box (rectangle) of this polygon, and returning it as a new Polygon (has 4 vertices).
+     * @return The bounding box of this polygon as a Polygon object, or null if this polygon has less than 3 vertices.
+     */
+    public Polygon getBoundingBox() {
+        if (_noOfVertices < 3) { return null; }
+
+        // in order to create the bounding box, we need these values for the four corners:
+        double maxY;
+        double minY;
+        double maxX;
+        double minX;
+
+        maxY = highestVertex().getY();
+
+        // in order to find the lowest vertex, similar to the highest method:
+        Point lowest = _vertices[0];
+        // starting from vertices[1], for we initialised the highest as the 0's index,
+        // so no need for checking for it
+        for (int i = 1; i < _noOfVertices; i++) {
+            if (lowest.isAbove(_vertices[i])) {
+                lowest = _vertices[i];
+            }
+        }
+        minY = lowest.getY();
+
+        // in order to find the most right (biggest X value), similar to the previous:
+        Point biggestX = _vertices[0];
+        for (int i = 1; i < _noOfVertices; i++) {
+            if (biggestX.isLeft(_vertices[i])) {
+                biggestX = _vertices[i];
+            }
+        }
+        maxX = biggestX.getX();
+
+        // in order to find the most left (smallest X value), similar to the previous:
+        Point smallestX = _vertices[0];
+        for (int i = 0; i < _noOfVertices; i++) {
+            if (smallestX.isRight(_vertices[i])) {
+                smallestX = _vertices[i];
+            }
+        }
+        minX = smallestX.getX();
+
+        // Creating the bounding box and adding the vertices as follow:
+        // first - bottom left = minX,minY
+        // second - bottom right = maxX,minY
+        // third - upper right = maxX,maxY
+        // fourth - upper left = minX,MaxY
+        Polygon boundingBox = new Polygon();
+
+        boundingBox.addVertex(minX, minY);
+        boundingBox.addVertex(maxX, minY);
+        boundingBox.addVertex(maxX, maxY);
+        boundingBox.addVertex(minX, maxY);
+
+        return boundingBox;
     }
 }

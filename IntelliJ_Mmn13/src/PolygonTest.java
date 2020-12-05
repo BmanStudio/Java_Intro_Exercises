@@ -81,6 +81,7 @@ class PolygonTest {
 
         assertEquals(true, polygon1.addVertex(2, 10));
         assertEquals(false, polygon1.highestVertex().equals(point2));
+
     }
 
     @Test
@@ -238,6 +239,7 @@ class PolygonTest {
         assertEquals(expectedArea, polygon.calcArea(), 0.01);
     }*/
 
+
     @Test
     void calcArea() {
         // Using the website https://www.mathopenref.com/coordpolygonareacalc.html
@@ -371,5 +373,187 @@ class PolygonTest {
         // Checking aliasing
         polygon1.getNextVertex(point0).move(5, 124);
         assertEquals(true, point1.equals(polygon1.getNextVertex(point0)));
+    }
+
+    @Test
+    void getBoundingBox() {
+        Polygon bounding1 = defaultPolygon2.getBoundingBox();
+        assertEquals(9, bounding1.calcArea(), 0.01);
+
+        Polygon bounding2 = defaultPolygon.getBoundingBox();
+        assertEquals(36, bounding2.calcArea(), 0.01);
+
+        Polygon square = new Polygon();
+        square.addVertex(1,1);
+        square.addVertex(51,1);
+        square.addVertex(51,51);
+        square.addVertex(1,51);
+        assertEquals(2500, square.calcArea(), 0.01);
+
+        Polygon boxSquare = square.getBoundingBox();
+        assertEquals(2500, boxSquare.calcArea(), 0.01);
+        assertEquals(true, boxSquare.calcArea() == square.calcArea() &&
+                boxSquare.calcPerimeter() == square.calcPerimeter());
+    }
+
+
+    ///
+    /// Matan's Tester:
+    ///
+
+    @Test
+    void polygonTestMatan() {
+        Polygon polygon = new Polygon();
+        polygon.addVertex(1.0, 0.0);
+        polygon.addVertex(3.0, 1.0);
+        polygon.addVertex(5.0, 3.0);
+        polygon.addVertex(6.0, 4.0);
+        polygon.addVertex(7.0, 4.0);
+        polygon.addVertex(8.0, 4.0);
+        polygon.addVertex(6.0, 4.0);
+        polygon.addVertex(4.0, 3.0);
+        polygon.addVertex(2.0, 2.0);
+        assertEquals(true, polygon.addVertex(1.0, 1.0));
+        assertEquals(false, polygon.addVertex(1.0, 1.0));
+    }
+
+    @Test
+    public void calcPerimeterMatan()
+    {
+        Polygon polygon1 = new Polygon();
+        polygon1.addVertex(1.0, 0.0);
+        polygon1.addVertex(3.0, 1.0);
+        polygon1.addVertex(5.0, 3.0);
+        polygon1.addVertex(6.0, 4.0);
+        polygon1.addVertex(7.0, 4.0);
+        polygon1.addVertex(8.0, 4.0);
+        polygon1.addVertex(4.0, 3.0);
+        polygon1.addVertex(2.0, 2.0);
+        assertEquals(17.0,polygon1.calcPerimeter(),17.1);
+        Polygon polygon2 = new Polygon();
+        polygon2.addVertex(2.0, 1.0);
+        polygon2.addVertex(5.0, 0.0);
+        polygon2.addVertex(7.0, 5.0);
+        polygon2.addVertex(4.0, 6.0);
+        polygon2.addVertex(1.0, 4.0);
+        assertEquals(18.4,polygon2.calcPerimeter(),18.6);
+    }
+
+    @Test
+    public void highestVertexMatan()
+    {
+        Polygon polygon1 = new Polygon();
+        polygon1.addVertex(1.0, 0.0);
+        polygon1.addVertex(3.0, 1.0);
+        polygon1.addVertex(5.0, 3.0);
+        polygon1.addVertex(6.0, 4.0);
+        polygon1.addVertex(7.0, 4.0);
+        polygon1.addVertex(8.0, 4.0);
+        polygon1.addVertex(4.0, 3.0);
+        polygon1.addVertex(2.0, 2.0);
+        Point point1=new Point(6.0,4.0);
+        assertEquals(point1.toString(),polygon1.highestVertex().toString());
+        Polygon polygon2 = new Polygon();
+        polygon2.addVertex(2.0, 1.0);
+        polygon2.addVertex(5.0, 0.0);
+        polygon2.addVertex(7.0, 5.0);
+        polygon2.addVertex(4.0, 6.0);
+        polygon2.addVertex(1.0, 4.0);
+        Point point2=new Point(4.0,6.0);
+        assertEquals(point2.toString(),polygon2.highestVertex().toString());
+    }
+
+    @Test
+    public void calcAreaMatan()
+    {
+        Polygon polygon1 = new Polygon();
+        polygon1.addVertex(1.0, 0.0);
+        polygon1.addVertex(3.0, 1.0);
+        polygon1.addVertex(5.0, 3.0);
+        polygon1.addVertex(6.0, 4.0);
+        polygon1.addVertex(7.0, 5.0);
+        polygon1.addVertex(8.0, 6.0);
+        polygon1.addVertex(4.0, 3.0);
+        polygon1.addVertex(2.0, 2.0);
+        assertEquals(5.49,polygon1.calcArea(),5.6);
+        Polygon polygon2 = new Polygon();
+        polygon2.addVertex(2.0, 1.0);
+        polygon2.addVertex(5.0, 0.0);
+        polygon2.addVertex(7.0, 5.0);
+        polygon2.addVertex(4.0, 6.0);
+        polygon2.addVertex(1.0, 4.0);
+        assertEquals(22.4,polygon2.calcArea(),22.6);
+    }
+
+    @Test
+    public void toPrintMatan()
+    {
+        Polygon polygon1 = new Polygon();
+        assertEquals("The polygon has 0 vertices.",polygon1.toString());
+        polygon1.addVertex(1.0, 0.0);
+        polygon1.addVertex(3.0, 1.0);
+        polygon1.addVertex(5.0, 3.0);
+        polygon1.addVertex(6.0, 4.0);
+        polygon1.addVertex(7.0, 5.0);
+        polygon1.addVertex(8.0, 6.0);
+        polygon1.addVertex(4.0, 3.0);
+        polygon1.addVertex(2.0, 2.0);
+        Polygon polygon3 = new Polygon();
+        polygon3.addVertex(2.0, 1.0);
+        polygon3.addVertex(8.0, 1.0);
+        polygon3.addVertex(8.0, 6.0);
+        polygon3.addVertex(2.0, 6.0);
+
+        assertEquals(5.49,polygon1.calcArea(),5.6);
+        Polygon polygon2 = new Polygon();
+        polygon2.addVertex(2.0, 1.0);
+        polygon2.addVertex(5.0, 0.0);
+        polygon2.addVertex(7.0, 5.0);
+        polygon2.addVertex(4.0, 6.0);
+        polygon2.addVertex(1.0, 4.0);
+        assertEquals(22.4,polygon2.calcArea(),22.6);
+    }
+
+    @Test
+    public void boundingBoxMatan()
+    {
+        Polygon polygon1 = new Polygon();
+        polygon1.addVertex(3.0, 1.0);
+        polygon1.addVertex(5.0, 3.0);
+        polygon1.addVertex(6.0, 4.0);
+        polygon1.addVertex(7.0, 5.0);
+        polygon1.addVertex(8.0, 6.0);
+        polygon1.addVertex(4.0, 3.0);
+        polygon1.addVertex(2.0, 2.0);
+        Polygon polygon3 = new Polygon();
+        polygon3.addVertex(2.0, 1.0);
+        polygon3.addVertex(8.0, 1.0);
+        polygon3.addVertex(8.0, 6.0);
+        polygon3.addVertex(2.0, 6.0);
+        assertEquals(polygon3.toString(),polygon1.getBoundingBox().toString());
+        Polygon polygon2 = new Polygon();
+        polygon2.addVertex(2.0, 1.0);
+        polygon2.addVertex(5.0, 0.0);
+        polygon2.addVertex(7.0, 5.0);
+        polygon2.addVertex(4.0, 6.0);
+        polygon2.addVertex(1.0, 4.0);
+        Polygon polygon4 = new Polygon();
+        polygon4.addVertex(1.0, 0.0);
+        polygon4.addVertex(7.0, 0.0);
+        polygon4.addVertex(7.0, 6.0);
+        polygon4.addVertex(1.0, 6.0);
+        assertEquals(polygon4.toString(),polygon2.getBoundingBox().toString());
+        Polygon polygon5 = new Polygon();
+        polygon5.addVertex(1.0, 0.0);
+        assertEquals(null,polygon5.getBoundingBox());
+        polygon5.addVertex(2.0, 0.0);
+        assertEquals(null,polygon5.getBoundingBox());
+        polygon5.addVertex(1.50, 3.0);
+        Polygon polygon6 = new Polygon();
+        polygon6.addVertex(1.0, 0.0);
+        polygon6.addVertex(2.0, 0.0);
+        polygon6.addVertex(2.0, 3.0);
+        polygon6.addVertex(1.0, 3.0);
+        assertEquals(polygon6.toString(),polygon5.getBoundingBox().toString());
     }
 }
