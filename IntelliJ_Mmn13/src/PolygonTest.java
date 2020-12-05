@@ -271,4 +271,105 @@ class PolygonTest {
         assertEquals(7.25, polygon1.calcArea(), 0.01);
 
     }
+
+    @Test
+    void isBigger() {
+        assertEquals(true, defaultPolygon.isBigger(defaultPolygon2));
+        assertEquals(false, defaultPolygon2.isBigger(defaultPolygon));
+        assertEquals(false, defaultPolygon2.isBigger(defaultPolygon2));
+
+        Polygon polygon3 = new Polygon();
+        polygon3.addVertex(2,1);
+        polygon3.addVertex(3,1);
+        polygon3.addVertex(4,3);
+        polygon3.addVertex(3,4);
+        polygon3.addVertex(1,3);
+
+
+        assertEquals(false, polygon3.isBigger(defaultPolygon2));
+
+        polygon3.addVertex(1,1.5);
+        assertEquals(true, polygon3.isBigger(defaultPolygon2));
+
+        assertEquals(true, defaultPolygon.isBigger(polygon3));
+        assertEquals(false, defaultPolygon2.isBigger(polygon3));
+
+        Polygon polygon4 = new Polygon(), polygon5 = new Polygon();
+        assertEquals(false, polygon4.isBigger(polygon5));
+        assertEquals(false, polygon5.isBigger(polygon4));
+
+        polygon4.addVertex(2,1);
+        polygon4.addVertex(3,1);
+        polygon4.addVertex(4,3);
+        polygon5.addVertex(2,1);
+        polygon5.addVertex(3,1);
+        polygon5.addVertex(4,3);
+        assertEquals(false, polygon4.isBigger(polygon5));
+        assertEquals(false, polygon5.isBigger(polygon4));
+
+        polygon4.addVertex(3,4);
+        assertEquals(true, polygon4.isBigger(polygon5));
+    }
+
+    @Test
+    void findVertex() {
+        Point point1 = new Point(2,1);
+        Point point2 = new Point(5,0);
+        assertEquals(0, defaultPolygon.findVertex(point1));
+        assertEquals(1, defaultPolygon.findVertex(point2));
+
+        Point point3 = new Point(5,1);
+        assertEquals(-1, defaultPolygon.findVertex(point3));
+
+        Point point4 = new Point(1,2);
+        Point point5 = new Point(1,6);
+        assertEquals(9, defaultPolygon.findVertex(point4));
+        assertEquals(-1, defaultPolygon.findVertex(point5));
+
+        Polygon polygon1 = new Polygon();
+        assertEquals(-1, polygon1.findVertex(point1));
+
+        polygon1.addVertex(point1.getX(), point1.getY());
+        assertEquals(0, polygon1.findVertex(point1));
+
+        polygon1.addVertex(point2.getX(), point2.getY());
+        assertEquals(1, polygon1.findVertex(point2));
+    }
+
+    @Test
+    void getNextVertex() {
+        Point point0 = new Point(2, 1);
+        Point point1 = new Point(3, 1);
+        Point point2 = new Point(4, 3);
+        Point point3 = new Point(3, 4);
+        Point point4 = new Point(1, 3);
+
+        assertEquals(true, point1.equals(defaultPolygon2.getNextVertex(point0)));
+        assertEquals(true, point2.equals(defaultPolygon2.getNextVertex(point1)));
+        assertEquals(true, point3.equals(defaultPolygon2.getNextVertex(point2)));
+        assertEquals(true, point4.equals(defaultPolygon2.getNextVertex(point3)));
+        assertEquals(true, point0.equals(defaultPolygon2.getNextVertex(point4)));
+
+        Polygon polygon1 = new Polygon();
+        assertEquals(null, polygon1.getNextVertex(point0));
+        assertEquals(null, polygon1.getNextVertex(point1));
+
+        polygon1.addVertex(point0.getX(), point0.getY());
+        assertEquals(true, point0.equals(polygon1.getNextVertex(point0)));
+        assertEquals(null, polygon1.getNextVertex(point1));
+
+        polygon1.addVertex(point1.getX(), point1.getY());
+        assertEquals(true, point1.equals(polygon1.getNextVertex(point0)));
+        assertEquals(true, point0.equals(polygon1.getNextVertex(point1)));
+
+        polygon1.addVertex(point2.getX(), point2.getY());
+        assertEquals(true, point1.equals(polygon1.getNextVertex(point0)));
+        assertEquals(true, point2.equals(polygon1.getNextVertex(point1)));
+        assertEquals(true, point0.equals(polygon1.getNextVertex(point2)));
+        assertEquals(null, polygon1.getNextVertex(point3));
+
+        // Checking aliasing
+        polygon1.getNextVertex(point0).move(5, 124);
+        assertEquals(true, point1.equals(polygon1.getNextVertex(point0)));
+    }
 }

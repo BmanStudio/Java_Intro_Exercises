@@ -131,12 +131,80 @@ public class Polygon {
         return perimeter;
     }
 
+    /**
+     * Calculating the area of the Polygon (if has more than 2 vertices)
+     * @return The area of the Polygon as a real number, or 0 in case the polygon has less than 3 vertices.
+     */
     public double calcArea() {
         if (_noOfVertices < 3) { return 0; }
+
         double area = 0;
+        // Iterating through the array (including the last one, excluding the first two),
+        // starting from Point #3 and climbing up when always calculating the triangle
+        // that is being created between Point#1, Point#i and Point#i-1
+        // (the point that previous to the one that represented by i)
+        // and finally adding the triangle area to the sum (var area),
+        // by using the private method triangleArea (which based on Heron's formula)
         for (int i = 2; i <= _noOfVertices - 1; i++) {
             area += triangleArea(_vertices[0], _vertices[i - 1], _vertices[i]);
         }
         return area;
+    }
+
+    /**
+     * Check if this polygon is bigger than a reference polygon.
+     * @param other the reference polygon
+     * @return True if this polygon is bigger than the reference polygon, false if smaller or equal.
+     */
+    public boolean isBigger(Polygon other) {
+        return this.calcArea() > other.calcArea();
+    }
+
+    /**
+     * Check if a given point is a vertex of the polygon, and returning its index.
+     * @param p The reference point to be checked
+     * @return The Point index (0 <= int) if it is a vertex of the polygon, and -1 if isn't.
+     */
+    public int findVertex(Point p) {
+        // if the polygon has no vertices
+        if (_noOfVertices == 0) { return -1; }
+
+        for (int i = 0; i < _noOfVertices; i++){
+            if (_vertices[i].equals(p)) {
+                return i;
+            }
+        }
+
+        // if got here, means the given point is not a vertex of the polygon:
+        return -1;
+    }
+
+    /**
+     * Returning the next vertex of the polygon relative to a given vertex (if exist).
+     * @param p Point which represents a vertex of the polygon.
+     * @return null if the given point is not a vertex of the polygon,or a copy of the next vertex to the given reference point
+     */
+    public Point getNextVertex(Point p) {
+        // if there are no vertices in the polygon
+        if (_noOfVertices == 0) { return null; }
+
+        // if the given point is not a vertex of the polygon
+        if (findVertex(p) == -1) { return null; }
+
+        // if the given point is the only (and therefore the first) vertex of the polygon:
+        // returning the first (and only) vertex.
+        if (_noOfVertices == 1 && findVertex(p) == 0) { return _vertices[0]; }
+
+        // if the given point is the last vertex of the polygon - returning the first vertex.
+        if (findVertex(p) == _noOfVertices - 1) { return _vertices[0]; }
+
+        // if got here, means that:
+        // 1) the polygon has at least 1 vertex
+        // 2) the given point is a vertex of the polygon
+        // 3) the given point is not the only (and first) vertex of the polygon
+        // 4) the given point is not the last vertex of the polygon.
+        // So now we can safely tell that the given point has a next point
+        int next = findVertex(p) + 1;
+        return new Point(_vertices[next]);
     }
 }
