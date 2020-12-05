@@ -4,6 +4,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
+/**
+ * Tester for Polygon.java - Mmn13 into to CS and Java - 2021a
+ * @author Ori Ben Nun
+ * @version 5/12/2020
+ */
 class PolygonTest {
 
     Polygon defaultPolygon = new Polygon();
