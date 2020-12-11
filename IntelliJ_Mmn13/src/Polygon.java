@@ -4,7 +4,7 @@
  * between two points on the boundary ever goes outside the polygon,
  * and all of the interior angles are less than 180 degrees
  * @author Ori Ben Nun
- * @version 5/12/2020
+ * @version 11/12/2020
  */
 public class Polygon {
 
@@ -113,7 +113,7 @@ public class Polygon {
     public double calcPerimeter() {
         double perimeter = 0;
 
-        if (_noOfVertices == 0 || _noOfVertices == 1) {
+        if (_noOfVertices <= 1) {
             return 0;
         }
         else if (_noOfVertices == 2) {
@@ -165,8 +165,6 @@ public class Polygon {
      * @return The Point index (0 <= int) if it is a vertex of the polygon, and -1 if isn't.
      */
     public int findVertex(Point p) {
-        // if the polygon has no vertices
-        if (_noOfVertices == 0) { return -1; }
 
         for (int i = 0; i < _noOfVertices; i++){
             if (_vertices[i].equals(p)) {
@@ -174,7 +172,7 @@ public class Polygon {
             }
         }
 
-        // if got here, means the given point is not a vertex of the polygon:
+        // if got here, means the given point is not a vertex of the polygon or the polygon has no vertices:
         return -1;
     }
 
@@ -187,15 +185,16 @@ public class Polygon {
         // if there are no vertices in the polygon
         if (_noOfVertices == 0) { return null; }
 
+        int pVertexIndex = findVertex(p);
         // if the given point is not a vertex of the polygon
-        if (findVertex(p) == -1) { return null; }
+        if (pVertexIndex == -1) { return null; }
 
         // if the given point is the only (and therefore the first) vertex of the polygon:
         // returning the first (and only) vertex.
-        if (_noOfVertices == 1 && findVertex(p) == 0) { return _vertices[0]; }
+        if (_noOfVertices == 1 && pVertexIndex == 0) { return new Point(_vertices[0]); }
 
         // if the given point is the last vertex of the polygon - returning the first vertex.
-        if (findVertex(p) == _noOfVertices - 1) { return _vertices[0]; }
+        if (pVertexIndex == _noOfVertices - 1) { return new Point(_vertices[0]); }
 
         // if got here, means that:
         // 1) the polygon has at least 1 vertex
@@ -203,7 +202,7 @@ public class Polygon {
         // 3) the given point is not the only (and first) vertex of the polygon
         // 4) the given point is not the last vertex of the polygon.
         // So now we can safely tell that the given point has a next point
-        int next = findVertex(p) + 1;
+        int next = pVertexIndex + 1;
         return new Point(_vertices[next]);
     }
 
