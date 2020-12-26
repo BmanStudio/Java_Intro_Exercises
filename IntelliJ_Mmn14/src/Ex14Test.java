@@ -654,5 +654,78 @@ class Ex14Test {
         };
 
         assertEquals(3, Ex14.findSingle(a21));
+
+        int[] a22 = {
+                1, 1,
+                -23, -23,
+                1, 1,
+                1, 1,
+                1, 1,
+                1, 1,
+                        0,
+                1, 1,
+                1, 1
+        };
+
+        // TODO check if there is need for this edge case
+        //assertEquals(0, Ex14.findSingle(a22));
+
+        int[] a23 = {
+                8, 8,
+                1, 1,
+                3, 3,
+                5, 5,
+                        -23,
+                0, 0,
+                2, 2
+        };
+
+        assertEquals(-23, Ex14.findSingle(a23));
+
+        int[] a24 = {
+                8, 8,
+                1, 1,
+                3, 3,
+                5, 5,
+                9, 9,
+                100, 100,
+                23, 23,
+                        -23,
+                0, 0,
+                2, 2
+        };
+
+        assertEquals(-23, Ex14.findSingle(a24));
+
+        int[] a25 = {
+                8, 8,
+                1, 1,
+                3, 3,
+                5, 5,
+                -23,
+                0, 0
+        };
+
+        assertEquals(-23, Ex14.findSingle(a25));
+
+        int[] a26 = {
+                8, 8,
+                1, 1,
+                3, 3,
+                5, 5,
+                        -23
+        };
+
+        assertEquals(-23, Ex14.findSingle(a26));
+
+        int[] a27 = {
+                        -23,
+                8, 8,
+                1, 1,
+                0, 0,
+                2, 2
+        };
+
+        assertEquals(-23, Ex14.findSingle(a27));
     }
 }
