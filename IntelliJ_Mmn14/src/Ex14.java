@@ -23,10 +23,10 @@ public class Ex14 {
             return a[0];
         }
 
-        // the pointers for the binary search
+        // the pointers for the binary search:
         int start = 0; // the index of the first element
         int end = a.length - 1; // the index of the last element
-        int mid;
+        int mid; // will be overridden in the while loop
 
         while (start <= end) {
 
@@ -42,7 +42,7 @@ public class Ex14 {
             if (mid != 1) {
                 // logically, the orphan must be in an even index (including 0), and the end will be even as well
                 // so in order to make sure the mid will always look at an even index, will check for mod 2
-                // if mid is on odd index, decrease by 1.
+                // if mid is on odd index, decrease by 1 (so it will be even)
                 if (mid % 2 != 0) {
                     mid--;
                 }
