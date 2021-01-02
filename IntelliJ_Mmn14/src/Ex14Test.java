@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class Ex14Test {
@@ -727,5 +729,53 @@ class Ex14Test {
         };
 
         assertEquals(-23, Ex14.findSingle(a27));
+
+        int[] a28 = {
+                1, 1,
+                8, 8,
+                2, 2,
+                8, 8,
+                1, 1,
+                1, 1,
+                0, 0,
+                -23,
+                0, 0,
+                2, 2
+        };
+
+        assertEquals(-23, Ex14.findSingle(a28));
+    }
+
+    @Test
+    void smallestSubSum() {
+        int[] arr1 = {8, 1, 4, 45, 6, 0, 19};
+        assertEquals(3, Ex14.smallestSubSum(arr1, 51));
+
+        int[] arr2 = {8, 1, 4, 45, 6, 0, 19};
+        assertEquals(2, Ex14.smallestSubSum(arr2, 49));
+
+        int[] arr3 = {8, 1, 4, 45, 6, 0, 19};
+        assertEquals(1, Ex14.smallestSubSum(arr3, 20));
+
+        int[] arr4 = {100, 100, 100, 600, 0, 100, 8, 1, 4, 45, 6, 0, 19, 500, 200, 30, 400};
+        assertEquals(4, Ex14.smallestSubSum(arr4, 1000));
+
+        int[] arr5 = {100, 100, 100, 600, 0, 100, 8, 1, 4, 45, 6, 0, 19, 500, 200, 30, 400};
+        assertEquals(-1, Ex14.smallestSubSum(arr5, 10050));
+
+        int[] arr6 = {100, 100, 100, 600, 0, 101, 8, 1, 4, 45, 6, 0, 19, 500, 200, 30, 40};
+        assertEquals(6, Ex14.smallestSubSum(arr6, 1000));
+
+        int[] arr7 = {100, 100, 100, 600, 0, 100, 0, 1, 4, 45, 6, 0, 19, 500, 200, 30, 40};
+        assertEquals(8, Ex14.smallestSubSum(arr7, 1000));
+
+        int[] arr8 = {100, 100, 100, 600, 0, 100, 0, 1, 999, 45, 6, 0, 19, 500, 200, 30, 40};
+        assertEquals(2, Ex14.smallestSubSum(arr8, 1000));
+
+        int[] arr9 = {100, 100, 100, 600, 0, 1000, 0, 1, 4, 45, 6, 0, 19, 500, 200, 30, 40};
+        assertEquals(3, Ex14.smallestSubSum(arr9, 1000));
+
+        int[] arr10 = {1000, 1000, 1000, 600, 401, 1000, 0, 1, 4, 45, 6, 0, 19, 500, 200, 30, 40, 1001};
+        assertEquals(1, Ex14.smallestSubSum(arr10, 1000));
     }
 }

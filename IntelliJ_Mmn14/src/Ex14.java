@@ -11,7 +11,7 @@ public class Ex14 {
      * This method takes an appropriate array of integers,
      * which each number occurs twice in a row but only 1 number which occurs only once ("orphan"),
      * and returns that one number (not it's index!)
-     * The runtime complexity of the method is big O of log base 2 of N => O(logN), because we are using a binary search algorithm
+     * The runtime complexity of the method is big O of log base 2 of N => O(logN), because we are using a binary search algorithm // TODO explain more about the complexity?
      * The space complexity is, of course, O(1)
      * @param a An appropriate array of integers.
      * @return The "orphan" number which occurs only once in the array provided (not it's index!).
@@ -79,5 +79,59 @@ public class Ex14 {
         }
         // if got here, means something wrong, and returns Int.MinValue as indicator
         return Integer.MIN_VALUE;
+    }
+
+    // Question 2:
+
+    // TODO add API with complexity
+    // TODO change to pure O(N) from the geekforgeek website solution
+    public static int smallestSubSum(int arr[], int x) {
+        int subArrMinLength = Integer.MAX_VALUE;
+        int subArrStartIndex = 0;
+        //int subArrSum = 0;
+
+        int currentLength = 0;
+        int currentSum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > x) {
+                return 1;
+            }
+            else {
+                currentSum += arr[i];
+                currentLength++;
+                while (currentSum > x) {
+                    if ( currentLength < subArrMinLength) {
+                        subArrMinLength = currentLength;
+                    }
+                    currentSum -= arr[subArrStartIndex];
+                    subArrStartIndex++;
+                    currentLength--;
+                }
+            }
+        }
+
+        if (subArrMinLength == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return subArrMinLength;
+
+
+//                if (tempSum > x) {
+//                    if ( currentLength < subArrMinLength) {
+//                        subArrMinLength = currentLength;
+//                        subArrStartIndex = i - (subArrMinLength - 1);
+//                        subArrSum = tempSum;
+//
+//                        currentLength = 0;
+//                        tempSum = 0;
+//                    }
+//        if (subArrMinLength < Integer.MAX_VALUE) {
+//            for (int i = subArrStartIndex; i < (subArrStartIndex + subArrMinLength - 1); i++) {
+//                if ( subArrSum - arr[i] > x) {
+//                    subArrSum -= arr[i];
+//                    subArrMinLength--;
+//                }
+//            }
+//        }
     }
 }
