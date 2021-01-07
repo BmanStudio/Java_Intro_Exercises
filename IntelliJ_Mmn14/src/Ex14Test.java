@@ -791,6 +791,10 @@ class Ex14Test {
         System.out.println("----------Test for 0 Ended------------");
         assertEquals(0, Ex14.solutions(31));
         System.out.println("----------Test for 31 Ended------------");
+        assertEquals(0, Ex14.solutions(-4));
+        System.out.println("----------Test for -4 Ended------------");
+        assertEquals(0, Ex14.solutions(98));
+        System.out.println("----------Test for 98 Ended------------");
         assertEquals(1, Ex14.solutions(3));
         System.out.println("----------Test for 3 Ended------------");
         assertEquals(10, Ex14.solutions(6));
