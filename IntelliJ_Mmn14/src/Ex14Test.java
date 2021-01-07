@@ -778,4 +778,54 @@ class Ex14Test {
         int[] arr10 = {1000, 1000, 1000, 600, 401, 1000, 0, 1, 4, 45, 6, 0, 19, 500, 200, 30, 40, 1001};
         assertEquals(1, Ex14.smallestSubSum(arr10, 1000));
     }
+
+    @Test
+    void solutions() {
+
+        Ex14.solutionsS(13, 1, 1, 1);
+
+        System.out.println("----------Test Ended------------");
+
+        Ex14.solutions(13);
+
+//        assertEquals(6, Ex14.solutions(5));
+//        System.out.println("----------Test for 5 Ended------------");
+//        assertEquals(0, Ex14.solutions(2));
+//        System.out.println("----------Test for 2 Ended------------");
+//        assertEquals(0, Ex14.solutions(0));
+//        System.out.println("----------Test for 0 Ended------------");
+//        assertEquals(0, Ex14.solutions(31));
+//        System.out.println("----------Test for 31 Ended------------");
+//        assertEquals(1, Ex14.solutions(3));
+//        System.out.println("----------Test for 3 Ended------------");
+//        assertEquals(10, Ex14.solutions(6));
+//        System.out.println("----------Test for 6 Ended------------");
+//        assertEquals(3, Ex14.solutions(4));
+//        System.out.println("----------Test for 4 Ended------------");
+//        assertEquals(15, Ex14.solutions(7));
+//        System.out.println("----------Test for 7 Ended------------");
+//        assertEquals(21, Ex14.solutions(8));
+//        System.out.println("----------Test for 8 Ended------------");
+//        assertEquals(28, Ex14.solutions(9));
+//        System.out.println("----------Test for 9 Ended------------");
+//        assertEquals(36, Ex14.solutions(10));
+//        System.out.println("----------Test for 10 Ended------------");
+//        assertEquals(45, Ex14.solutions(11));
+//        System.out.println("----------Test for 11 Ended------------");
+//        assertEquals(55, Ex14.solutions(12));
+//        System.out.println("----------Test for 12 Ended------------");
+//        Ex14.solutionsS(13, 1, 1, 1);
+//        System.out.println("----------TestS for 13 Ended------------");
+//        assertEquals(66, Ex14.solutionsS(13, 1, 1, 1));
+//        System.out.println("----------TestS for 13 Ended------------");
+//        System.out.println("----------Test for 13 Ended------------");
+//        assertEquals(78, Ex14.solutions(14));
+//        System.out.println("----------Test for 14 Ended------------");
+//        assertEquals(91, Ex14.solutions(15));
+//        System.out.println("----------Test for 15 Ended------------");
+//        assertEquals(378, Ex14.solutions(29));
+//        System.out.println("----------Test for 29 Ended------------");
+//        assertEquals(406, Ex14.solutions(30));
+//        System.out.println("----------Test for 30 Ended------------");
+    }
 }

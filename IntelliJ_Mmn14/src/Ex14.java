@@ -114,24 +114,93 @@ public class Ex14 {
             return -1;
         }
         return subArrMinLength;
+    }
 
+    // Question 3:
 
-//                if (tempSum > x) {
-//                    if ( currentLength < subArrMinLength) {
-//                        subArrMinLength = currentLength;
-//                        subArrStartIndex = i - (subArrMinLength - 1);
-//                        subArrSum = tempSum;
-//
-//                        currentLength = 0;
-//                        tempSum = 0;
-//                    }
-//        if (subArrMinLength < Integer.MAX_VALUE) {
-//            for (int i = subArrStartIndex; i < (subArrStartIndex + subArrMinLength - 1); i++) {
-//                if ( subArrSum - arr[i] > x) {
-//                    subArrSum -= arr[i];
-//                    subArrMinLength--;
-//                }
-//            }
-//        }
+    // TODO remove!!
+    public static int temp = 0;
+    // TODO write api
+    public static int solutions(int num) {
+        temp = 0;
+        if (num < 3 || num > 30) {
+            return 0;
+        }
+
+        return solutions(num, 1, 1, 1);
+    }
+
+    // TODO check that everything is good with the >10 numbers, find a formula to check the answers, write some API and comments
+    private static int solutions(int num, int x1, int x2, int x3) {
+        if (x1 + x2 + x3 < num) {
+            if (x3 == 10) {
+                x2 += 1;
+            }
+            else {
+                x3 += 1;
+            }
+            return solutions(num, x1, x2, x3);
+        }
+        else if (x1 + x2 + x3 == num) {
+            temp++;
+            System.out.println(x1 + " + " + x2 + " + " + x3);
+            if (x3 == 1) {
+                if (x2 == 1) {
+                    return 1;
+                }
+                else {
+                    x2 = 1;
+                    x1 += 1;
+                    if (x1 > 10) {
+                        System.out.println("temp - " + temp);
+                        return 1;
+                    }
+                    return 1 + solutions(num, x1, x2, x3);
+                }
+            }
+            else {
+                x3 -= 1;
+                // TODO fix the bug here:
+                if (x2 == 10) {
+                    x1 += 1;
+                    x2 -= 1;
+                }
+                else {
+                    x2 += 1;
+                }
+                return 1 + solutions(num, x1, x2, x3);
+            }
+        }
+        return 0;
+    }
+
+    public static int solutionsS(int num, int x1, int x2, int x3) {
+        if (x1 + x2 + x3 < num) {
+                x3 += 1;
+
+            return solutionsS(num, x1, x2, x3);
+        }
+        else if (x1 + x2 + x3 == num) {
+            temp++;
+            System.out.println(x1 + " + " + x2 + " + " + x3);
+            if (x3 == 1) {
+                if (x2 == 1) {
+                    System.out.println("temp - " + temp);
+                    return 1;
+                }
+                else {
+                    x2 = 1;
+                    x1 += 1;
+                    return 1 + solutionsS(num, x1, x2, x3);
+                }
+            }
+            else {
+                x3 -= 1;
+                    x2 += 1;
+
+                return 1 + solutionsS(num, x1, x2, x3);
+            }
+        }
+        return 0;
     }
 }
