@@ -11,12 +11,16 @@ public class Ex14 {
      * This method takes an appropriate array of integers,
      * which each number occurs twice in a row but only 1 number which occurs only once ("orphan"),
      * and returns that one number (not it's index!)
-     * The runtime complexity of the method is big O of log base 2 of N => O(logN), because we are using a binary search algorithm // TODO explain more about the complexity?
-     * The space complexity is, of course, O(1)
+     * Time complexity:
+     *  O(logN) - The runtime complexity of the method is big O of log base 2 of N, because we are using a method based on binary search algorithm,
+     *  because we are "inspecting" the middle element in the array, and each time "narrowing" the array by half, and repeating the process until we found the single number
+     *  or we got to a 1 element's array.
+     * Space complexity
+     *  O(1) - because we are just storing 3 integers variables.
      * @param a An appropriate array of integers.
      * @return The "orphan" number which occurs only once in the array provided (not it's index!).
      */
-    public static int findSingle (int [] a) {
+    public static int findSingle (int[] a) {
 
         // edge case: only 1 element in the array => this is the number to be returned
         if (a.length == 1) {
@@ -83,12 +87,32 @@ public class Ex14 {
 
     // Question 2:
 
-    // TODO add API with complexity
-    // TODO change to pure O(N) from the geekforgeek website solution
+    /**
+     * This method takes an array of positive integers and a number (positive integer),
+     * and returns the size of the shortest
+     * subarray which sums to more than the given number, or returns -1 in cases which this condition is not met.
+     * Time complexity:
+     *  O(N) - there is one iteration over all the elements of the array, which is O(N).
+     *      Within the for loop we are "adding" elements to a temporary subarray which is
+     *      being checked every time (after the element is being added).
+     *      once we found a subarray which sums to more than the given number - we will
+     *      enter a while loop, but LETS PAY ATTENTION - within the while loop we are "removing" elements from the temporary subarray.
+     *      So - the maximum iterations of the inner while loop is the size of the subarray, which can only get as big as N (which will happen ONLY on the last iteration).
+     *      Because the while loop removes elements from the subarray, there cannot be more than 1 subarray with a size of N.
+     *      We conclude that, for the worst case, the inner "while loop" will run A TOTAL of N times during the whole "for loop" iteration
+     *      (because IN THE WORST CASE there is only N elements we can add in total, means we have N elements to remove in total)
+     *      SO, in total - there is O(N) + O(N) == O(2N) == O(N)
+     * Space complexity:
+     *  O(1) - We are storing only 4 integers variables (not "really" creating the subarray, but looking at a "window" of elements - defined by start and end indices).
+     * @param arr The array of positive integers.
+     * @param x The target number.
+     * @return The size of the shortest subarray, or -1 in case there is no subarray which meet the condition.
+     */
+    // TODO add commenting
     public static int smallestSubSum(int[] arr, int x) {
+        // This variable is being overridden every time we find the min size subarray (by comparing)
         int subArrMinLength = Integer.MAX_VALUE;
         int subArrStartIndex = 0;
-        //int subArrSum = 0;
 
         int currentLength = 0;
         int currentSum = 0;
@@ -117,7 +141,6 @@ public class Ex14 {
     }
 
     // Question 3:
-
 
     /**
      * This Recursive method takes an int number and finds all the possible combinations of
@@ -226,5 +249,64 @@ public class Ex14 {
         }
         // The method shouldn't get to this point whatsoever, but this return expression is necessary for compilation
         return 0;
+    }
+
+    // Question 4:
+
+    // TODO write API and comments
+    public static int cntTrueReg (boolean[][]mat) {
+        return cntTrueReg(mat, 0, 0);
+    }
+
+    private static int cntTrueReg (boolean[][]mat, int row, int col) {
+        if (col == mat.length) {
+            col = 0;
+            row += 1;
+        }
+        if (row == mat.length) {
+            return 0;
+        }
+
+        if (mat[row][col]) {
+            flipRegion(mat, row, col);
+            return 1 + cntTrueReg(mat, row, col + 1);
+        }
+        else {
+            return cntTrueReg(mat, row, col + 1);
+        }
+    }
+
+    private static void flipRegion(boolean[][] mat, int row, int col) {
+        mat[row][col] = false;
+
+        int left = row - 1;
+        int right = row + 1;
+
+        int up = col - 1;
+        int down = col + 1;
+
+        if (left >= 0) {
+            if (mat[left][col]) {
+                flipRegion(mat, left, col);
+            }
+        }
+
+        if (right < mat.length) {
+            if (mat[right][col]) {
+                flipRegion(mat, right, col);
+            }
+        }
+
+        if (up >= 0) {
+            if (mat[row][up]) {
+                flipRegion(mat, row, up);
+            }
+        }
+
+        if (down < mat.length) {
+            if (mat[row][down]) {
+                flipRegion(mat, row, down);
+            }
+        }
     }
 }

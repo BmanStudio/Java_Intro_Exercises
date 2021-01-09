@@ -827,5 +827,73 @@ class Ex14Test {
         System.out.println("----------Test for 29 Ended------------");
         assertEquals(1, Ex14.solutions(30));
         System.out.println("----------Test for 30 Ended------------");
+        System.out.println(Ex14.solutions(18));
+    }
+
+    @Test
+    void cntTrueReg() {
+        boolean[][] mat1 = {
+                { false, false, false, false, true},
+                { false, true, true, true, false},
+                { false, false, true, true, false},
+                {true, false, false, false, false},
+                {true, true, false, false, false}
+        };
+        assertEquals(3, Ex14.cntTrueReg(mat1));
+
+        boolean[][] mat2 = {
+                { false, false, false, false, false},
+                { false, true, true, true, false},
+                { false, false, true, true, false},
+                {true, false, false, false, false},
+                {true, true, false, false, false}
+        };
+        assertEquals(2, Ex14.cntTrueReg(mat2));
+
+        boolean[][] mat3 = {
+                { true,  true,  true,  false, true},
+                { false, true,  true,  true,  false},
+                { false, false, true,  true,  false},
+                { true,  false, false, false, false},
+                { true,  true,  false, false, false}
+        };
+        assertEquals(3, Ex14.cntTrueReg(mat3));
+
+        boolean[][] mat4 = {
+                { true }
+        };
+        assertEquals(1, Ex14.cntTrueReg(mat4));
+
+        boolean[][] mat5 = {
+                { false }
+        };
+        assertEquals(0, Ex14.cntTrueReg(mat5));
+
+        boolean[][] mat6 = {
+                { true,  false,  true,  false,  true},
+                { true,  false,  true,  false,  true},
+                { true,  false,  true,  false,  true},
+                { true,  false,  true,  false,  true},
+                { true,  false,  true,  false,  true}
+        };
+        assertEquals(3, Ex14.cntTrueReg(mat6));
+
+        boolean[][] mat7 = {
+                { true,  false,  true,  false,  true},
+                { true,  false,  true,  false,  true},
+                { true,  true,  true,  true,  true},
+                { true,  false,  true,  false,  true},
+                { true,  false,  true,  false,  true}
+        };
+        assertEquals(1, Ex14.cntTrueReg(mat7));
+
+        boolean[][] mat8 = {
+                { true,  false,  true,  false,  true},
+                { true,  false,  true,  true,  true},
+                { true,  true,  true,  false,  true},
+                { true,  false,  true,  false,  true},
+                { true,  false,  true,  false,  true}
+        };
+        assertEquals(1, Ex14.cntTrueReg(mat8));
     }
 }
