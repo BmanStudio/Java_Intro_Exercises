@@ -1,7 +1,7 @@
 /**
  * Holds all the answers for Mmn 14, 2021a
  * @author Ori Ben Nun
- * @version 26/12/2020
+ * @version 09/01/2020
  */
 public class Ex14 {
 
@@ -108,7 +108,7 @@ public class Ex14 {
      * @param x The target number.
      * @return The size of the shortest subarray, or -1 in case there is no subarray which meet the condition.
      */
-    // TODO add commenting
+    // TODO add commenting and shorten time complexity explanation
     public static int smallestSubSum(int[] arr, int x) {
         // This variable is being overridden every time we find the min size subarray (by comparing)
         int subArrMinLength = Integer.MAX_VALUE;

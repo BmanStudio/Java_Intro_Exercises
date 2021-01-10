@@ -896,4 +896,9 @@ class Ex14Test {
         };
         assertEquals(1, Ex14.cntTrueReg(mat8));
     }
+
+    @Test
+    void UniTeachersTest() {
+        Ex14StudentTester.main();
+    }
 }
