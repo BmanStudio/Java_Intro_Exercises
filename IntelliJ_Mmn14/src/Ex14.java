@@ -1,7 +1,7 @@
 /**
  * Holds all the answers for Mmn 14, 2021a
  * @author Ori Ben Nun
- * @version 09/01/2020
+ * @version 14/01/2021
  */
 public class Ex14 {
 
@@ -73,7 +73,6 @@ public class Ex14 {
             // same goes for the other side, analogically
             // if mid is equal to the left block
             else {
-                // TODO edge case of equals to both sides (example - [1,1,1,1,0,1,1,1,1,1,1])
                 // if mid equals left, and mid is just between start and end, means end is the orphan
                 if (end == mid + 1) {
                     return a[end];
@@ -97,9 +96,8 @@ public class Ex14 {
      *      being checked every time (after the element is being added).
      *      once we found a subarray which sums to more than the given number - we will
      *      enter a while loop, but LETS PAY ATTENTION - within the while loop we are "removing" elements from the temporary subarray.
-     *      So - the maximum iterations of the inner while loop is the size of the subarray, which can only get as big as N (which will happen ONLY on the last iteration).
-     *      Because the while loop removes elements from the subarray, there cannot be more than 1 subarray with a size of N.
-     *      We conclude that, for the worst case, the inner "while loop" will run A TOTAL of N times during the whole "for loop" iteration
+     *      So - the MAXIMUM iterations of the inner loop is the size of the subarray, which can only get as big as N (if so, will happen only on the last iteration).
+     *      We conclude that, for the worst case, the inner "while loop" will run A TOTAL of N times during the whole algorithm runtime
      *      (because IN THE WORST CASE there is only N elements we can add in total, means we have N elements to remove in total)
      *      SO, in total - there is O(N) + O(N) == O(2N) == O(N)
      * Space complexity:
@@ -108,25 +106,30 @@ public class Ex14 {
      * @param x The target number.
      * @return The size of the shortest subarray, or -1 in case there is no subarray which meet the condition.
      */
-    // TODO add commenting and shorten time complexity explanation
     public static int smallestSubSum(int[] arr, int x) {
-        // This variable is being overridden every time we find the min size subarray (by comparing)
-        int subArrMinLength = Integer.MAX_VALUE;
-        int subArrStartIndex = 0;
+        int subArrMinLength = Integer.MAX_VALUE;    // This variable is representing the final answer. it is being overridden every time we find the min size subarray (by comparing), so we initialize it to always be bigger than any subarray found
+        int subArrStartIndex = 0; // The variable which represents the first index of the subarray
 
         int currentLength = 0;
         int currentSum = 0;
         for (int i = 0; i < arr.length; i++) {
+            // In a case of a single element which is bigger than the target sum, we can safely return 1 - as there is no possible smaller subarray
             if (arr[i] > x) {
                 return 1;
             }
             else {
+                // We are temporarily adding each element to the subarray (which is being represented by the sum and the length of the subarray)
                 currentSum += arr[i];
                 currentLength++;
+                // If, after adding the current element, the subarray sum is bigger than the target sum - we will iterate over the subarray elements
                 while (currentSum > x) {
+                    // If the current subarray length is the shortest by now - we will assign it as the answer (until, maybe, other subarray will take its place)
                     if ( currentLength < subArrMinLength) {
                         subArrMinLength = currentLength;
                     }
+                    // Each iteration we will remove the first element in the subarray.
+                    // If the removal of this element will make the current sum smaller than the target sum - we can break the inner loop and start adding elements again until we find a new subarray that will be bigger than x.
+                    // If the current sum is still bigger - means we actually found a smaller subarray "within" the current one, and we can update the answer - while we will keep on removing elements until the current sum will get smaller than x.
                     currentSum -= arr[subArrStartIndex];
                     subArrStartIndex++;
                     currentLength--;
@@ -134,6 +137,7 @@ public class Ex14 {
             }
         }
 
+        // In case we haven't found any subarray - means the answer was never overridden, and still holds the initialized value (which can never occur in a real life given array).
         if (subArrMinLength == Integer.MAX_VALUE) {
             return -1;
         }
@@ -143,13 +147,13 @@ public class Ex14 {
     // Question 3:
 
     /**
-     * This Recursive method takes an int number and finds all the possible combinations of
-     * three numbers between 1-10 which sums to the passed number, while printing every possible combination
+     * This Recursive method takes a number and finds all the possible combinations of
+     * three numbers between 1-10 (both included) which sums to the passed number, while printing every possible combination
      * once it was found.
      * @param num The number which we inspect to find all the groups of three number that sums to it
      * @return The number of different combinations of groups of three numbers that sums to the passed number
      */
-    // This is the "main" method, which calls to an helper recursion overloaded method, which contains all the algorithm logic
+    // This is the "main" public method, it calls an helper recursion overloaded method, which contains all the algorithm logic
     public static int solutions(int num) {
         if (num < 3 || num > 30) {
             return 0;
@@ -253,37 +257,83 @@ public class Ex14 {
 
     // Question 4:
 
-    // TODO write API and comments
+    /**
+     * This recursive method takes a 2D boolean array and finds all the "true regions" found inside.
+     * True region is a set of "neighbour" elements which every each one of them holds the value of true,
+     * while we define neighbour elements as any element which located right / left / above / under (in the 2D array formation) a specific element.
+     * Attention - The given array WILL GET CHANGED, so please pass a clone of the original array.
+     * @param mat The 2D boolean array (matrix), which will get changed during the process. The matrix "height" and "width" should be equal (a square).
+     * @return The number of true regions found in the matrix
+     */
+    // This is the "main" public method, it calls an helper recursion overloaded method, which contains all the algorithm logic
     public static int cntTrueReg (boolean[][]mat) {
+        // calling the overloaded recursive method which takes the matrix and initializing the search
+        // from the first element in the matrix - in the upper-left corner, which located in the 0,0 index
         return cntTrueReg(mat, 0, 0);
     }
 
+    /**
+     *  Overloaded method of the public solutions method.
+     *  This method holds the logic for the algorithm.
+     *  The idea is to iterate over the elements, over the rows (from left to right) and than columns (top to bottom),
+     *  while each time checking if the current inspected element holds the value "true", and keeping on calling the recursion "down".
+     *  Once we found such element, we are increasing the final answer by one, and more importantly -
+     *  we are "flipping" the value of the "positive" (true value) element, alongside with all of its positive neighbours.
+     *  By doing that - we can be sure not to count any more elements of that region as "new regions".
+     *  Trying to say - we are basically counting a single positive element as a whole region, while "removing" this region, so we won't find any more positive elements until we find a new "region"
+     * @param mat The "original" matrix reference, which is being changed during the algorithm runtime by the flipRegion private method.
+     * @param row The "row" index of the current inspected element
+     * @param col The "column" index of the current inspected element
+     * @return The number of regions found, and the last loop will return to the public method the final answer.
+     */
     private static int cntTrueReg (boolean[][]mat, int row, int col) {
+        // If we get to the last element in the current row, we will move to the next row and reset the column index back to the leftmost element of the new row.
         if (col == mat.length) {
             col = 0;
             row += 1;
         }
+        // Because we know that the matrix's "height" and "width" are equal (a square), we know that once the row index is equal to the matrix length,
+        // we actually already went over all the matrix's elements (and trying to reach an "out of range" index), so we can break the recursion while not adding to the final result.
         if (row == mat.length) {
             return 0;
         }
 
+        // If we found a "region" (which starts here, on this positive element) - we should now "flip" all the region's elements to be negative, as we are counting them as one
+        // and therefore we can now increase the answer by 1, and move to the next element (moving one to the right, or down if its the last element of the row)
         if (mat[row][col]) {
+            // This is the private method which responsible for finding and flipping the region's elements values.
             flipRegion(mat, row, col);
             return 1 + cntTrueReg(mat, row, col + 1);
         }
+        // Otherwise - we should keep looking in the next element, until we went through all the matrix.
         else {
             return cntTrueReg(mat, row, col + 1);
         }
     }
 
+    /**
+     * This recursive method is responsible for the process of finding all of the region's elements which is connected to the given first element (the beginning of the region),
+     * and to change each of their values to false.
+     * The idea is to change the current given element (which was found as positive, therefore is part of the region) to false, and then to check each of its neighbours
+     * to see if they are also part of that same region, if so - we will do the same process for them as well.
+     * The method has a void return type, as its purpose is only to change the matrix.
+     * @param mat The matrix to change, starting from the given element
+     * @param row row index of the element that needs to be changed, and to be checked for more positive neighbours
+     * @param col row column of the element that needs to be changed, and to be checked for more positive neighbours
+     */
     private static void flipRegion(boolean[][] mat, int row, int col) {
+        // First - flipping the given element value
         mat[row][col] = false;
 
+        // Setting the indices values of the element's neighbours
         int left = row - 1;
         int right = row + 1;
 
         int up = col - 1;
         int down = col + 1;
+
+        // Checking each of the neighbours with 4 separate "if" statements, while the first condition is a validation of
+        // that the neighbour element's index is actually still within the matrix's range.
 
         if (left >= 0) {
             if (mat[left][col]) {
