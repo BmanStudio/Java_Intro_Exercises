@@ -19,32 +19,59 @@ public class BigNumber {
         _head = new IntNode(0);
     }
 
+//    /**
+//     * Initializing a new BigNumber linked-list which represents the passed number.
+//     * Time complexity - the outer while loop is O(1), and inside the loop we are using the a private method in order
+//     *      to add elements to the end of the list, which is O(1) as well - because we know this is a new list, so there cannot be more than 19 digits at this point (the max number of digits in a long typed number in Java)
+//     *      Therefore - the time complexity is O(1) * O(1) = O(1).
+//     * Space complexity - we are only using local variables, which means O(1).
+//     * @param number The non-negative number which will be represented by the BigNumber linked-list.
+//     */
+//    public BigNumber (long number) {
+//        // The idea is to loop through the passed number, and remove the rightmost digit
+//        // (the single unit) from the number, while adding it to the end of the BigNumber list,
+//        // means that the number of iterations is the number of digits of the given number.
+//        // So for the worst case, this while loop will run 19 times (as for the max number of digits in a single long type number in Java)
+//        // Therefore - the loop time complexity is O(1).
+//        while (number > 0) { // We are dividing the number by 10 each time, so eventually will get to 0
+//            System.out.println(number % 10);
+//            long temp = number; // taking a copy of the number, so we can check what was the removed digit
+//            number = number / 10; // removing the last digit
+//            // getting the removed digit, which is the rightmost of the current number, and casting to int to save space (always storing only 1 digit).
+//            // we getting the digit by multiplying the number by 10 ("reversing the division"), and because this is an whole number (integer),
+//            // the difference between the copy and this one will be exactly the value of the removed digit.
+//            int rightDigit = (int) (temp - (number * 10));
+//            IntNode newTail = new IntNode(rightDigit);
+//            // assigning the digit as the new tail of the list, because we are storing the "reversed" version of the number, so the rightmost digit of the original number
+//            // will be the head of the list, while the leftmost is the tail.
+//            addToEnd(newTail); // The time complexity of this method is O(N)
+//        }
+//    }
+
     /**
+     * // TODO finish API and add comments
      * Initializing a new BigNumber linked-list which represents the passed number.
-     * Time complexity - the outer while loop is O(1), and inside the loop we are using the a private method in order
-     *      to add elements to the end of the list, which is O(1) as well - because we know this is a new list, so there cannot be more than 19 digits at this point (the max number of digits in a long typed number in Java)
-     *      Therefore - the time complexity is O(1) * O(1) = O(1).
+     * Time complexity - because the max digits a
      * Space complexity - we are only using local variables, which means O(1).
      * @param number The non-negative number which will be represented by the BigNumber linked-list.
      */
-    public BigNumber (long number) {
-        // The idea is to loop through the passed number, and remove the rightmost digit
-        // (the single unit) from the number, while adding it to the end of the BigNumber list,
-        // means that the number of iterations is the number of digits of the given number.
-        // So for the worst case, this while loop will run 19 times (as for the max number of digits in a single long type number in Java)
-        // Therefore - the loop time complexity is O(1).
-        while (number > 0) { // We are dividing the number by 10 each time, so eventually will get to 0
-            long temp = number; // taking a copy of the number, so we can check what was the removed digit
-            number = number / 10; // removing the last digit
+    public BigNumber(long number) {
 
-            // getting the removed digit, which is the rightmost of the current number, and casting to int to save space (always storing only 1 digit).
-            // we getting the digit by multiplying the number by 10 ("reversing the division"), and because this is an whole number (integer),
-            // the difference between the copy and this one will be exactly the value of the removed digit.
-            int rightDigit = (int) (temp - (number * 10));
-            IntNode newTail = new IntNode(rightDigit);
-            // assigning the digit as the new tail of the list, because we are storing the "reversed" version of the number, so the rightmost digit of the original number
-            // will be the head of the list, while the leftmost is the tail.
-            addToEnd(newTail); // The time complexity of this method is O(N)
+        IntNode currTail = _head;
+
+        while (number > 0) {
+
+            int rightDigit = (int) (number % 10);
+            IntNode newNode = new IntNode(rightDigit);
+            if (currTail == null) {
+                _head = newNode;
+                currTail = _head;
+            }
+            else {
+                currTail.setNext(newNode);
+                currTail = newNode;
+            }
+            number /= 10;
         }
     }
 
@@ -87,6 +114,90 @@ public class BigNumber {
         return toString(_head);
     }
 
+    /**
+     * This method compares between the values represented by two BigNumbers, related to the one that the method was called from.
+     * For example:if the value which is represented by this BigNumber (the called object) is smaller than the passed one, well will call is "smaller than", and the method
+     * will return -1.
+     * Time complexity -
+     * Space complexity -
+     * @param other The reference BigNumber object, which it's value will be compared to this BigNumber's value.
+     * @return
+     */
+    public int compareTo (BigNumber other) {
+        // If this bignumber has more digits than other - means its the bigger one.
+        if (this.length() > other.length()) {
+            return 1;
+        }
+        else if (this.length() < other.length()) {
+            return -1;
+        }
+
+        // TODO finish, API and comments
+        // if has the same length:
+        // flip the numbers and compare
+        return 0;
+    }
+
+    public BigNumber addBigNumber (BigNumber other) {
+
+        IntNode resultHead = null;
+        IntNode resultCurrTail = null;
+
+        IntNode myCurrent = _head;
+        IntNode otherCurrent = other._head;
+        int reminder = 0; //TODO change name
+
+        while (myCurrent != null | otherCurrent != null) {
+            int myCurrentValue;
+            int otherCurrentValue;
+
+            if (myCurrent == null) {
+                myCurrentValue = 0;
+            }
+            else {
+                myCurrentValue = myCurrent.getValue();
+                myCurrent = myCurrent.getNext();
+            }
+
+            if (otherCurrent == null) {
+                otherCurrentValue = 0;
+            }
+            else {
+                otherCurrentValue = otherCurrent.getValue();
+                otherCurrent = otherCurrent.getNext();
+            }
+
+            int resultNewValue = reminder + myCurrentValue + otherCurrentValue;
+
+            if (resultNewValue > 9) {
+                reminder = 1;
+                resultNewValue = resultNewValue % 10;
+            }
+            else {
+                reminder = 0;
+            }
+
+            IntNode resultNewDigit = new IntNode(resultNewValue);
+
+            if (resultHead == null) {
+                resultHead = resultNewDigit;
+                resultCurrTail = resultHead;
+            }
+            else {
+                resultCurrTail.setNext(resultNewDigit);
+                resultCurrTail = resultNewDigit;
+            }
+        }
+
+        if (reminder == 1) {
+            resultCurrTail.setNext(new IntNode(1));
+        }
+        BigNumber resultNumber = new BigNumber();
+
+        resultNumber._head.setValue(resultHead.getValue());
+        resultNumber._head.setNext(resultHead.getNext());
+        return resultNumber;
+    }
 
 
 // Private methods:
