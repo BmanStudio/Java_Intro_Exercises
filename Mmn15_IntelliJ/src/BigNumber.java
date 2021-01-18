@@ -49,7 +49,7 @@ public class BigNumber {
 //    }
 
     /**
-     * // TODO finish API and add comments
+     * // TODO finish API and add comments and change names
      * Initializing a new BigNumber linked-list which represents the passed number.
      * Time complexity - because the max digits a
      * Space complexity - we are only using local variables, which means O(1).
@@ -105,7 +105,7 @@ public class BigNumber {
      * representing.
      * Time complexity - We are iterating once through all of the nodes in the list before folding back the recursion,
      *      means - the time complexity is O(N).
-     * Space complexity - O(1) (not including the recursion stack memory) - since we are not storing any variables.
+     * Space complexity - O(1) (not including the recursion stack memory) - since we are not storing any variables. // TODO describe the space complexity of the stack
      * @return The number represented by BigNumber as a string, in its "normal form".
      */
     // This is the public "main" recursion method, which calls the private overloaded version
@@ -115,37 +115,82 @@ public class BigNumber {
     }
 
     /**
+     * // TODO check if we can traverse less times
      * This method compares between the values represented by two BigNumbers, related to the one that the method was called from.
-     * For example:if the value which is represented by this BigNumber (the called object) is smaller than the passed one, well will call is "smaller than", and the method
+     * For example: if the value which is represented by this BigNumber (the called object) is smaller than the passed one, well will call it is "smaller than", and the method
      * will return -1.
-     * Time complexity -
-     * Space complexity -
+     * The idea - if one of the numbers has more digits than the other one - means its the bigger one.
+     *  if the lengths are equal - we are creating new "flipped" versions of the numbers which represents the "normal form" of the numbers,
+     *  which allows us to normally traverse through them one time and compare each digit at each "level" (node) for the two flipped lists.
+     * Time complexity - O(N) - we are traversing the lists couple of times, by never as nested loops. // TODO write exactly how much iterations
+     * Space complexity - O(N) - we are creating two BigNumber lists for the flipped versions as part of the algorithm.
      * @param other The reference BigNumber object, which it's value will be compared to this BigNumber's value.
-     * @return
+     * @return 1 if this number is bigger, 0 if they are equal, -1 if other is bigger.
      */
     public int compareTo (BigNumber other) {
         // If this bignumber has more digits than other - means its the bigger one.
-        if (this.length() > other.length()) {
+        if (this.length() > other.length()) {   // this check takes O(N)
             return 1;
         }
-        else if (this.length() < other.length()) {
-            return -1;
+        else if (this.length() < other.length()) { // this check takes O(N)
+            return -1; // This bignumber has less digits and therefore its the smaller one.
         }
-
-        // TODO finish, API and comments
         // if has the same length:
         // flip the numbers and compare
-        return 0;
+        else {
+            // We are flipping the copies of the BigNumbers lists that is representing the numbers as its "normal forms", so the leftmost digit will represent
+            // the "biggest 10^n multiplier" - means we can compare the numbers "normally" - comparing each digit from left to right.
+            // Time complexity - the private method is taking O(N) and the copy constructor is O(N) as well - so total of O(N).
+            // Space complexity added is O(N)
+            // TODO instead of creating a copy - just flip it once again after the algorithm is done.
+            BigNumber myFlippedNumber = flipBigNumber(new BigNumber(this));
+            BigNumber otherFlippedNumber = flipBigNumber(new BigNumber(other));
+
+            // traverse the two numbers until one of the digits is bigger than the other, which means its the bigger one.
+            IntNode myFlippedCurr = myFlippedNumber._head;
+            IntNode otherFlippedCurr = otherFlippedNumber._head;
+
+            // this loop is O(N)
+            while (myFlippedCurr != null | otherFlippedCurr != null) {
+                // if my digits are over, means other got more digits - so other is bigger
+                if (myFlippedCurr == null) {
+                    return -1;
+                }
+                // If other's digits are over, my BigNumber is bigger
+                else if (otherFlippedCurr == null) {
+                    return 1;
+                }
+                // otherwise - we will compare the two current digits values
+                if (myFlippedCurr.getValue() > otherFlippedCurr.getValue()) {
+                    return 1;
+                }
+                else if (myFlippedCurr.getValue() < otherFlippedCurr.getValue()) {
+                    return -1;
+                }
+                // else, means the two values are equal and we will move to the next digits
+                else {
+                    myFlippedCurr = myFlippedCurr.getNext();
+                    otherFlippedCurr = otherFlippedCurr.getNext();
+                }
+            }
+            // else - means the two numbers are completely equal, and we will return 0
+            return 0;
+        }
     }
 
+    /**
+     * // TODO add API and comments
+     * @param other
+     * @return
+     */
     public BigNumber addBigNumber (BigNumber other) {
 
         IntNode resultHead = null;
         IntNode resultCurrTail = null;
 
-        IntNode myCurrent = _head;
+        int reminder = 0;
         IntNode otherCurrent = other._head;
-        int reminder = 0; //TODO change name
+        IntNode myCurrent = _head;
 
         while (myCurrent != null | otherCurrent != null) {
             int myCurrentValue;
@@ -199,11 +244,16 @@ public class BigNumber {
         return resultNumber;
     }
 
+    public BigNumber addLong (long num) {
+        // TODO think of a better solution with less iterations!
+        return addBigNumber(new BigNumber(num));
+    }
+
 
 // Private methods:
 
     // The helper method of the public toString recursive method.
-    // The idea - iterating through all the digits until we get to the last one, which returns an empty string (so the string concatenation will work)
+    // The idea - traverse through all the digits until we get to the last one, which returns an empty string (so the string concatenation will work)
     // and then while folding the recursion, each node adding itself after the digits that
     // located After it (because the BigNumber is stored as a "reversed" version of the number)
     private String toString(IntNode node) {
@@ -211,6 +261,31 @@ public class BigNumber {
             return "";
         }
         return toString(node.getNext()) + node.getValue();
+    }
+
+
+    // This is an helper method which flipping the passed linked list
+    // so the head will become the tail and the other way around.
+    // The idea is to keep track of 3 pointers which points to the prev, current and next nodes while we
+    // traverse the list, so we could change current's _next to its prev node at each step
+    // Time complexity - O(N) - traversing over the list once.
+    // Space complexity - O(1) - using only 3 nodes pointers variables.
+    private BigNumber flipBigNumber(BigNumber bigNumber) {
+        // Initializing 3 pointers to be able to change the next node while still holding the address of the "original next",
+        // so we could still traverse the list while changing each node's _next to the prev node,
+        // which eventually will be the new flipped head.
+        IntNode prev = null;
+        IntNode current = bigNumber._head;
+        IntNode next = null;
+
+        while (current != null) {
+            next = current.getNext();
+            current.setNext(prev);
+            prev = current;
+            current = next;
+        }
+        bigNumber._head = prev;
+        return bigNumber;
     }
 
     // Taken from the Uni's presentation:
