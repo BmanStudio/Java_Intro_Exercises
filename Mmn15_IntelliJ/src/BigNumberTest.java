@@ -142,4 +142,63 @@ class BigNumberTest {
         BigNumber bigNumber10 = bigNumber9.addLong(15547);
         assertEquals("15547", bigNumber10.toString());
     }
+
+    @Test
+    void subtractBigNumber() {
+        BigNumber bigNumber1 = new BigNumber(5391);
+        BigNumber bigNumber2 = new BigNumber(3589);
+        BigNumber bigNumber1m2 = bigNumber1.subtractBigNumber(bigNumber2);
+        assertEquals("1802", bigNumber1m2.toString());
+
+        BigNumber bigNumber3 = new BigNumber(1000);
+        bigNumber1m2 = bigNumber1m2.subtractBigNumber(bigNumber3);
+        assertEquals("802", bigNumber1m2.toString());
+
+        BigNumber bigNumber4 = new BigNumber(1000);
+        bigNumber1m2 = bigNumber1m2.subtractBigNumber(bigNumber4);
+        assertEquals("198", bigNumber1m2.toString());
+
+        BigNumber bigNumber5 = new BigNumber(3005);
+        BigNumber bigNumber6 = new BigNumber(3003);
+        BigNumber bigNumber56 = bigNumber6.subtractBigNumber(bigNumber5);
+        assertEquals("2", bigNumber56.toString());
+
+        BigNumber bigNumber7 = bigNumber56.addBigNumber(bigNumber6);
+        BigNumber bigNumber75 = bigNumber5.subtractBigNumber(bigNumber7);
+        assertEquals("0", bigNumber75.toString());
+
+        BigNumber bigNumber8 = new BigNumber(10000);
+        BigNumber bigNumber9 = new BigNumber(20000);
+        BigNumber bigNumber89 = bigNumber9.subtractBigNumber(bigNumber8);
+        assertEquals("10000", bigNumber89.toString());
+
+
+        bigNumber89 = bigNumber89.subtractBigNumber(bigNumber89);
+        assertEquals("0", bigNumber89.toString());
+
+        BigNumber bigNumber10 = new BigNumber(6785675634530000000L);
+        BigNumber bigNumber11 = new BigNumber(1);
+        BigNumber bigNumber1011 = bigNumber10.subtractBigNumber(bigNumber11);
+        assertEquals("6785675634529999999", bigNumber1011.toString());
+
+        bigNumber1011 = bigNumber1011.addBigNumber(bigNumber1011);
+        assertEquals("13571351269059999998", bigNumber1011.toString());
+
+        BigNumber bigNumber1012 = bigNumber1011.addBigNumber(bigNumber1011);
+        assertEquals("27142702538119999996", bigNumber1012.toString());
+
+        bigNumber1012 = bigNumber1012.subtractBigNumber(bigNumber1011);
+        assertEquals("13571351269059999998", bigNumber1012.toString());
+
+        BigNumber bigNumber13 = new BigNumber(59999990);
+        bigNumber1012 = bigNumber1012.subtractBigNumber(bigNumber13);
+        assertEquals("13571351269000000008", bigNumber1012.toString());
+
+        BigNumber bigNumber14 = new BigNumber(3571351269000000000L);
+        bigNumber1012 = bigNumber1012.subtractBigNumber(bigNumber14);
+        assertEquals("10000000000000000008", bigNumber1012.toString());
+
+        bigNumber1012 = bigNumber1012.subtractBigNumber(new BigNumber(9));
+        assertEquals("9999999999999999999", bigNumber1012.toString());
+    }
 }
