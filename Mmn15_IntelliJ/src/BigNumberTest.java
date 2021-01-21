@@ -6,7 +6,7 @@ class BigNumberTest {
 
     @Test
     void BigNumberTest() {
-        BigNumber bigNumber1 = new BigNumber();
+        BigNumber bigNumber1 = new BigNumber(0);
 
         BigNumber bigNumber2 = new BigNumber(12345);
         System.out.println(bigNumber2.toString());
@@ -125,5 +125,21 @@ class BigNumberTest {
         BigNumber bigNumber1 = new BigNumber(100);
         BigNumber bigNumber2 = bigNumber1.addLong(100);
         assertEquals("200", bigNumber2.toString());
+
+        BigNumber bigNumber3 = new BigNumber(15547);
+        BigNumber bigNumber4 = bigNumber3.addLong(0);
+        assertEquals("15547", bigNumber4.toString());
+
+        BigNumber bigNumber5 = new BigNumber(15547);
+        BigNumber bigNumber6 = bigNumber5.addLong(105);
+        assertEquals("15652", bigNumber6.toString());
+
+        BigNumber bigNumber7 = new BigNumber(105);
+        BigNumber bigNumber8 = bigNumber7.addLong(15547);
+        assertEquals("15652", bigNumber8.toString());
+
+        BigNumber bigNumber9 = new BigNumber(0);
+        BigNumber bigNumber10 = bigNumber9.addLong(15547);
+        assertEquals("15547", bigNumber10.toString());
     }
 }
