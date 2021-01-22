@@ -139,7 +139,9 @@ public class BigNumber {
     /**
      * // TODO add API and comments
      * this is only 1 traverse
-     * @param other
+     * Time complexity -
+     * Number of iterations over lists -
+     * Space complexity -      * @param other
      * @return
      */
     public BigNumber addBigNumber (BigNumber other) {
@@ -260,6 +262,7 @@ public class BigNumber {
 
 
     /** // TODO API and comments
+     * we iterate the list only once
      * The idea is very similar to addBigNumber - we are iterating through the longer list, while at each step subtracting
      * the current digit of the smaller number from the bigger number's digit (while keeping track of any adjustments
      * need to be made to the "next" digit if the subtraction result is smaller than 0.
@@ -269,6 +272,9 @@ public class BigNumber {
      *      without adding the zeros ("dumping all of the zeros")
      *      else - means we found a non-zero number AFTER a string of zeros, means all of the zeros "defining" the result number,
      *      so we will just concat the result to the list of zeros, and then reset the list of zeros and keep moving to the next digit (if exists)
+     * Time complexity -
+     * Number of iterations over lists -
+     * Space complexity -
      * @param other
      * @return
      */
@@ -378,6 +384,124 @@ public class BigNumber {
             resultNumber._head.setNext(resultHead.getNext());
         }
         return resultNumber;
+    }
+
+    /**
+     * The idea:
+     *  we are going to loop each node of the other list for every node of this list (means O(N * M)), trying to say:
+     *  for each node of this list:
+     *      for each node of other list:
+     *          1) Multiply the values stored in the current nodes.
+     *          2) add the result by modulo 10 to a new node in the result list (in the corresponding "position").
+     *             notice that at this point the new node could hold a number bigger than 9 (means "2 digits") - we will handle it at the end outside this loop.
+     *          3) Calculate a Carry variable which will be added to the next result node which represents the 10^n "reminder" from the multiplication.
+     *          4) move to the next node of se other list until we get to the tail
+     *      move to the next node of this list until we get to the tail
+     *  and finally initialize, store the list in a BigNumber object and return it
+     * Time complexity -
+     * Number of iterations over lists -
+     * Space complexity -
+     * @param other
+     * @return
+     */
+    // TODO API
+    public BigNumber multBigNumber (BigNumber other) {
+
+        // taking care of edge case where the value of one of the numbers is "plain" 0 (means its an "empty" BigNumber), so always the result will be 0
+        // so we can just return a new empty (0 initialized) BigNumber
+        if ((isPlainZero(this)) ||
+                isPlainZero(other)) {
+            return new BigNumber();
+        }
+
+        // Initializing the result head to a node with a value of 0 so we could add to its value
+        IntNode resultHead = new IntNode(0);
+        IntNode resultCurrNode = resultHead;
+
+        // We will use this list as the outer loop, so we are starting from the head
+        IntNode myCurrNode = this._head;
+
+        // Multiply each node of other list with this list
+        while (myCurrNode != null) {
+
+            // Creating and resetting the carry variable which holds the "positive reminder" for inner loop multiplication.
+            int carry = 0;
+
+            // At each iteration of the outer loop we moved one node forward, so we want to multiply this node by every
+            // node of other's list, so we will reset it back to its head
+            IntNode otherCurrNode = other._head;
+
+            // For the result node, we want to keep track of both the result node which corresponding to this list,
+            // as well as another one which we be modified inside the inner loop
+            // (because each node of result will be modified many times)
+            // so we will initialize another IntNode which will be in the corresponding position according to other's list
+            IntNode resultInCurrNode = resultCurrNode;
+
+            while (otherCurrNode != null) {
+
+                // Multiply the two current nodes, added with the current carry variable
+                int multiplyResult = (myCurrNode.getValue() * otherCurrNode.getValue()) + carry;
+
+                // checking if there is a next node in the result list AND there will be another loop
+                // (so we are not adding a node which will never be modify, means we will end up with a 0 at the beginning of the result number)
+                // and initializing one if isn't
+                if (resultInCurrNode.getNext() == null &&
+                        (myCurrNode.getNext() != null || otherCurrNode.getNext() != null)) {
+                    resultInCurrNode.setNext( new IntNode(0) );
+                }
+
+                // Add the value to the corresponding result node with.
+                // We are adding (to the current stored value) the result modulo 10 value, as we want it to be a single digit value, while we taking care of
+                // the event where it isn't with the carry variable and reassigning the value of the result node after updating the carry variable
+                int val = resultInCurrNode.getValue() + (multiplyResult % 10);
+                resultInCurrNode.setValue(val);
+
+                // The carry will be set as any "positive reminder" that should be "moved" (added) to the next node (the digit which is on the left side of this one)
+                carry = (multiplyResult / 10) + (resultInCurrNode.getValue() / 10);
+
+                resultInCurrNode.setValue( resultInCurrNode.getValue() % 10 );
+
+                // Moving to the next nodes of other list and result
+                // Also checking for the edge case where both of the nodes are the tails (which means we haven't
+                // created the next result node, so when exiting the inner loop we will just add the carry to the
+                // existing node, otherwise we will try to add the value to a null pointer)
+                if (resultInCurrNode.getNext() != null) {
+                    resultInCurrNode = resultInCurrNode.getNext();
+                }
+                else if (carry > 0) {
+                    resultInCurrNode.setNext( new IntNode(0) );
+                    resultInCurrNode = resultInCurrNode.getNext();
+                }
+                otherCurrNode = otherCurrNode.getNext();
+            }
+
+            // If we haven't added the remaining carry variable in the inner loop, we will add it now
+            if (carry > 0) {
+                resultInCurrNode.setValue( resultInCurrNode.getValue() + carry );
+            }
+
+            // Move to the next node of the outer loop (this list) as well as the corresponding result node
+            // (to modify all the existing nodes once again with the new multiplication process)
+            resultCurrNode = resultCurrNode.getNext();
+            myCurrNode = myCurrNode.getNext();
+        }
+        // Similar to the last methods - we will initialize a new BigNumber and assign the result list to it
+        BigNumber resultNumber = new BigNumber();
+
+        resultNumber._head.setValue(resultHead.getValue());
+
+        if (resultHead.getNext() != resultHead) {
+            resultNumber._head.setNext(resultHead.getNext());
+        }
+        return resultNumber;
+    }
+
+    /**
+     * An helper method to check if the BigNumber is "empty" (means its only storing 0 as the head and there is no other digit
+     * This method is O(1) of Time and Space complexity
+     */
+    private boolean isPlainZero(BigNumber bigNumber) {
+        return bigNumber._head.getValue() == 0 && bigNumber._head.getNext() == null;
     }
 
 // Private methods:
@@ -501,7 +625,7 @@ public class BigNumber {
      * Taken from the IntList class, made by the Uni.
      * ATTENTION - adding complexity of O(N)!
      */
-    private void printList() {
+    public void printList() {
         IntNode temp = _head;
         while (temp != null) {
             System.out.print(temp.getValue() + "-->");
