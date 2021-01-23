@@ -1,12 +1,17 @@
 /**
- * Mmn 15
- * // TODO general class API
+ * Mmn 15 - 2021A
+ * This BigNumber represents a large number (any number of digits) by storing each of the digits as a node in a linked list.
+ * The interface offers a few basic but essential arithmetic operations involving another BigNumber object or a "regular" long typed number.
+ * As well as "converting" the list to a "normal number form" - which will be possible through String representation (using toString overriding).
+ *  Fun fact - the number's digits actually stored in a "reversed" version - where the rightmost digit in a number is in fact the list's head node
+ *             (in order to make arithmetic operations more efficient regarding to runtime consideration)
  * @author Ori Ben Nun
- * @version 22/01/2021
+ * @version 23/01/2021
  */
 public class BigNumber {
 
-    private IntNode _head; // Stores the rightmost digit of the number (single unit).
+    // Stores the rightmost digit of the number (single unit)
+    private IntNode _head;
 
 // Constructors:
 
@@ -22,7 +27,7 @@ public class BigNumber {
 
     /**
      * Initializing a new BigNumber linked-list which represents the passed number,
-     * by assigning each digit of the number to a Node in the BigNumber list (which is reversed to the "normal form")
+     *  by assigning each digit of the number to a Node in the BigNumber list (which is reversed to the "normal form")
      *
      * Time complexity - O(N) - because we are traversing ONCE through the digits that defining the passed number - but we actually knows that the max value on N will be 19.
      *
@@ -104,9 +109,8 @@ public class BigNumber {
      *
      * @return The number represented by BigNumber as a string, in its "normal form".
      */
-    // This is the public "main" recursion method, which calls the private overloaded version
-    // which contains the algorithm logic
     public String toString() {
+    // This is the public "main" recursion method, which calls the private overloaded version that contains the algorithm logic
         return toString(_head);
     }
 
@@ -139,11 +143,6 @@ public class BigNumber {
      * This method takes a BigNumber and creates a new BigNumber object which represents the number which is the sum of this BigNumber
      *  and the passed BigNumber.
      *
-     * The idea - we are traversing once over the lists (while there are nodes left even in one of them), while at each iteration we are
-     *  adding the two corresponding nodes, and storing in the corresponding position result's node the sum value. In the case the sum is
-     *  bigger than 9 (means the node will hold more than 1 digit) - we are increasing a reminder variable which holds the value that should be added to the next node
-     *  (which represent the 10^n+1 position, related to the current node), and modifying the value to be modulo 10 (means a single digit).
-     *
      * Time complexity - O(N) - because we are iterating in a single loop over all of the nodes of the longer list.
      *
      * Number of iterations over lists - this method is traversing the longer list only once.
@@ -154,6 +153,14 @@ public class BigNumber {
      * @return A new BigNumber object which represents the number which is the sum of this BigNumber and the passed BigNumber.
      */
     public BigNumber addBigNumber (BigNumber other) {
+    //------------------------------------------------------------------------------
+    //  The idea:
+    //   we are traversing once over the lists (while there are nodes left even in one of them), while at each iteration we are
+    //   adding the two corresponding nodes, and storing in the corresponding position result's node the sum value. In the case the sum is
+    //   bigger than 9 (means the node will hold more than 1 digit) - we are increasing a reminder variable which holds the value that should be added to the next node
+    //        (which represent the 10^n+1 position, related to the current node), and modifying the value to be modulo 10 (means a single digit).
+    //------------------------------------------------------------------------------
+
         // Storing and keeping track of the result list, which start with an empty head,
         // while the current node will be the one we modify and "moving forward" in the loop.
         IntNode resultHead = null;
@@ -222,25 +229,13 @@ public class BigNumber {
             resultCurrNode.setNext(new IntNode(reminder));
         }
 
-        // Initializing a new BigNumber and linking the list we just created
-        BigNumber resultNumber = new BigNumber();
-
-        resultNumber._head.setValue(resultHead.getValue());
-        resultNumber._head.setNext(resultHead.getNext());
-
-        return resultNumber;
+        // Initializing a new BigNumber and link the list we just created
+        return createAndLinkBigNumber(resultHead);
     }
-
 
     /**
      * This method takes a long number and creating a new BigNumber object which represents the number which is the sum of this BigNumber
      *  and the passed number.
-     *
-     * The idea - Very similar to addBigNumber - we are traversing once over the list (or as long as the number of digits of the passed number),
-     *  while at each iteration we are
-     *  adding the two corresponding nodes, and storing in the corresponding position result's node the sum value. In the case the sum is
-     *  bigger than 9 (means the node will hold more than 1 digit) - we are increasing a reminder variable which holds the value that should be added to the next node
-     *  (which represent the 10^n+1 position, related to the current node), and modifying the value to be modulo 10 (means a single digit).
      *
      * Time complexity - O(N) - because we are iterating in a single loop over all of the nodes of the longer list.
      *
@@ -248,10 +243,20 @@ public class BigNumber {
      *
      * Space complexity - O(N) - because we are creating a new BigNumber, and its length will be N+1 for the "worst case" (where N represents the length of the longer list)
      *
-     * @param num The reference BigNumber object, which it's value will be summed with this BigNumber value.
-     * @return A new BigNumber object which represents the number which is the sum of this BigNumber and the passed BigNumber.
+     * @param num The long typed number, which it's value will be summed with this BigNumber value.
+     * @return A new BigNumber object which represents the number which is the sum of this BigNumber and the passed long typed number.
      */
     public BigNumber addLong (long num) {
+    //------------------------------------------------------------------------------
+    //  The idea:
+    //   Very similar to addBigNumber - we are traversing once over the list
+    //   (or as long as the number of digits of the passed number),
+    //   while at each iteration we are
+    //   adding the two corresponding nodes, and storing in the corresponding position result's node the sum value. In the case the sum is
+    //   bigger than 9 (means the node will hold more than 1 digit) - we are increasing a reminder
+    //   variable which holds the value that should be added to the next node
+    //   (which represent the 10^n+1 position, related to the current node), and modifying the value to be modulo 10 (means a single digit).
+    //------------------------------------------------------------------------------
 
         // Storing and keeping track of the result list, which start with an empty head,
         // while the current node will be the one we modify and "moving forward" in the loop.
@@ -306,7 +311,9 @@ public class BigNumber {
                 int newRightDigitValue = (int) (num % 10) + reminder;
                 reminder = 0;
                 IntNode newNode = new IntNode(newRightDigitValue);
-                resultCurrNode.setNext(newNode);
+                if (resultCurrNode != null) {
+                    resultCurrNode.setNext(newNode);
+                }
                 resultCurrNode = newNode;
             }
             // And in any case - we would want to "remove" the rightmost digit of num (doing so by dividing by 10)
@@ -319,29 +326,14 @@ public class BigNumber {
             resultCurrNode.setNext(new IntNode(reminder));
         }
 
-        // Initializing a new BigNumber and linking the list we just created
-        BigNumber newBigNumber = new BigNumber();
-
-        newBigNumber._head.setValue(resultHead.getValue());
-        newBigNumber._head.setNext(resultHead.getNext());
-        return newBigNumber;
+        // Initializing a new BigNumber and link the list we just created
+        return createAndLinkBigNumber(resultHead);
     }
 
 
     /**
      * This method takes a BigNumber and creates a new BigNumber object which represents the number which is the subtraction result between the bigger number
      *  and the other one (which is being calculated by the method as well).
-     *
-     * The idea is based on the method of "long subtraction" (which is being taught in elementary school).
-     *  and it is very similar to addBigNumber - we are iterating through the longer list, while at each step subtracting
-     *  the current digit of the smaller number from the bigger number's digit (while keeping track of any adjustments
-     *  need to be made to the "next" digit if the subtraction result is smaller than 0.
-     *  In order to handle a case where there is a string of zeros in the result (for ex. --> "3005" - "3002" = "0002"):
-     *  we are creating a new "list" (not a bigNumber) which holds all of the following zeros created in the subtraction process, and then:
-     *      if we got to the end of the bigger number while no numbers other than zero was found since we "started finding zeros" - we will just return the result number "as is"
-     *      without adding the zeros ("dumping all of the zeros")
-     *      else - means we found a non-zero number AFTER a string of zeros, means all of the zeros "defining" the result number,
-     *      so we will just concat the result to the list of zeros, and then reset the list of zeros and keep moving to the next digit (if exists)
      *
      * Time complexity - O(N) - because we are iterating in a single loop over all of the nodes of the longer list.
      *
@@ -354,6 +346,21 @@ public class BigNumber {
      * @return A new BigNumber object which represents the number which is the subtraction result.
      */
     public BigNumber subtractBigNumber (BigNumber other) {
+    //------------------------------------------------------------------------------
+    //   The idea:
+    //    based on the method of "long subtraction" (which is being taught in elementary school).
+    //    and it is very similar to addBigNumber - we are iterating through the longer list, while at each step subtracting
+    //    the current digit of the smaller number from the bigger number's digit (while keeping track of any adjustments
+    //    need to be made to the "next" digit if the subtraction result is smaller than 0.
+    //    In order to handle a case where there is a string of zeros in the result (for ex. --> "3005" - "3002" = "0002"):
+    //    we are creating a new "list" (not a bigNumber) which holds all of the following zeros created in the subtraction process, and then:
+    //    if we got to the end of the bigger number while no numbers other than zero was found since we
+    //    "started finding zeros" - we will just return the result number "as is"
+    //    without adding the zeros ("dumping all of the zeros")
+    //       else - means we found a non-zero number AFTER a string of zeros, means all of the zeros "defining" the result number,
+    //            so we will just concat the result to the list of zeros, and then reset the list of zeros and keep moving to the next digit (if exists)
+    //------------------------------------------------------------------------------
+
         // Checking to see which is the bigger number, so we will subtract the other one from it
         // and we are storing a reference to the bigger BigNumber
         int isMyNumberBigger = compareTo(other); // this method doing 2 iterations and takes O(N) space on memory stack for the recursion
@@ -463,35 +470,38 @@ public class BigNumber {
             }
         }
 
-        // Initializing a new BigNumber and linking the list we just created
-        BigNumber resultNumber = new BigNumber();
-
-        resultNumber._head.setValue(resultHead.getValue());
-        resultNumber._head.setNext(resultHead.getNext());
-
-        return resultNumber;
+        // Initializing a new BigNumber and link the list we just created
+        return createAndLinkBigNumber(resultHead);
     }
 
-    /**  // TODO API
-     * The idea:
-     *  we are going to loop each node of the other list for every node of this list (means O(N * M)), trying to say:
-     *  for each node of this list:
-     *      for each node of other list:
-     *          1) Multiply the values stored in the current nodes.
-     *          2) add the result by modulo 10 to a new node in the result list (in the corresponding "position").
-     *             notice that at this point the new node could hold a number bigger than 9 (means "2 digits") - we will handle it at the end outside this loop.
-     *          3) Calculate a Carry variable which will be added to the next result node which represents the 10^n "reminder" from the multiplication.
-     *          4) move to the next node of se other list until we get to the tail
-     *      move to the next node of this list until we get to the tail
-     *  and finally initialize, store the list in a BigNumber object and return it
-     * Time complexity -
-     * Number of iterations over lists -
-     * Space complexity -
-     * @param other
-     * @return
+    /**
+     * This method takes a BigNumber and creates a new BigNumber object which represents the number which is the multiplication product of this BigNumber
+     *  and the passed BigNumber.
+     *
+     * Time complexity - O(N * M) - because for each node of this BigNumber we are iterating through all of other's nodes.
+     *
+     * Number of iterations over lists - we are using a nested while loops within a while loop, means it will be a total of n * m iterations
+     *
+     * Space complexity - O(N*M) - because we are creating a new BigNumber, and its length will be N*M for the "worst case" (where N represents the length of this list and M represents the other list's length)
+     *
+     * @param other The reference BigNumber object, which it's value will be multiplied by this BigNumber value.
+     * @return A new BigNumber object which represents the number which is the multiplication product of this BigNumber and the passed BigNumber.
      */
     public BigNumber multBigNumber (BigNumber other) {
-
+    //------------------------------------------------------------------------------
+    //  The idea:
+    //    we are going to loop each node of the other list for every node of this list (means O(N * M)).
+    //    trying to say:
+    //     for each node of this list:
+    //        for each node of other list:
+    //            1) Multiply the values stored in the current nodes.
+    //            2) add the result by modulo 10 to a new node in the result list (in the corresponding "position").
+    //               notice that at this point the new node could hold a number bigger than 9 (means "2 digits") - we will handle it at the end outside this loop.
+    //            3) Calculate a Carry variable which will be added to the next result node which represents the 10^n "reminder" from the multiplication.
+    //            4) move to the next node of se other list until we get to the tail
+    //        move to the next node of this list until we get to the tail
+    //    and finally initialize, store the list in a BigNumber object and return it
+    //------------------------------------------------------------------------------
         // taking care of edge case where the value of one of the numbers is "plain" 0 (means its an "empty" BigNumber), so always the result will be 0
         // so we can just return a new empty (0 initialized) BigNumber
         if ((isPlainZero(this)) ||
@@ -544,6 +554,7 @@ public class BigNumber {
                 // The carry will be set as any "positive reminder" that should be "moved" (added) to the next node (the digit which is on the left side of this one)
                 carry = (multiplyResult / 10) + (resultInCurrNode.getValue() / 10);
 
+                // And finally we can store the "final" one digit result to the new node, as we "secured" the reminder in the carry variable
                 resultInCurrNode.setValue( resultInCurrNode.getValue() % 10 );
 
                 // Moving to the next nodes of other list and result
@@ -570,15 +581,9 @@ public class BigNumber {
             resultCurrNode = resultCurrNode.getNext();
             myCurrNode = myCurrNode.getNext();
         }
+
         // Similar to the last methods - we will initialize a new BigNumber and assign the result list to it
-        BigNumber resultNumber = new BigNumber();
-
-        resultNumber._head.setValue(resultHead.getValue());
-
-        if (resultHead.getNext() != resultHead) {
-            resultNumber._head.setNext(resultHead.getNext());
-        }
-        return resultNumber;
+        return createAndLinkBigNumber(resultHead);
     }
 
 // Private methods:
@@ -650,11 +655,31 @@ public class BigNumber {
     }
 
     /**
+     * The helper method for the adding, subtracting and multiplying methods,
+     * which takes the head of a result (the operation product) list of digits (node)
+     * and creates a new BigNumber object, and links the new BigNumber to the result list,
+     * which sums up to the requested product BigNumber object
+     */
+    private BigNumber createAndLinkBigNumber(IntNode resultHead) {
+        BigNumber resultNumber = new BigNumber();
+
+        if (resultHead != null) {
+            resultNumber._head.setValue(resultHead.getValue());
+
+            // In the case of a list containing only one node, we will not set the head.next to itself, but keep it null
+            if (resultHead.getNext() != resultHead) {
+                resultNumber._head.setNext(resultHead.getNext());
+            }
+        }
+
+        return resultNumber;
+    }
+
+    /**
      * An helper method to check if the BigNumber is "empty" (means its only storing 0 as the head and there is no other digit
      * This method is O(1) of Time and Space complexity
      */
     private boolean isPlainZero(BigNumber bigNumber) {
         return bigNumber._head.getValue() == 0 && bigNumber._head.getNext() == null;
     }
-
 }
